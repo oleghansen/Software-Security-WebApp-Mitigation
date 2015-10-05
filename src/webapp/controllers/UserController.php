@@ -56,9 +56,15 @@ class UserController extends Controller
 
     public function all()
     {
-        $this->render('users.twig', [
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){ 
+          $this->render('users.twig', [
             'users' => $this->userRepository->all()
-        ]);
+          ]);
+        }
+        else{
+          $this->app->redirect("/");  
+        }
     }
 
     public function logout()
@@ -73,21 +79,25 @@ class UserController extends Controller
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
 
-        } else {
+        } 
+        else {
             $user = $this->userRepository->findByUser($username);
-
+            $isAdmin = $this->auth->user()->isAdmin();
             if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
                     'user' => $user,
                     'username' => $username
                 ]);
-            } else if ($this->auth->check()) {
-
+            }
+            else if($isAdmin){
                 $this->render('showuserlite.twig', [
                     'user' => $user,
                     'username' => $username
                 ]);
+            }
+            else {
+                $this->app->redirect("/");
             }
         }
     }
