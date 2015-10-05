@@ -44,7 +44,6 @@ class UserController extends Controller
             $password = $password;
             $password = $this->hash->make($password, $salt);
             $user = new User($username, $password, $salt, $fullname, $address, $postcode);
-            echo "test " . $user->getSalt();
             $this->userRepository->save($user);
 
             $this->app->flash('info', 'Thanks for creating a user. Now log in.');
