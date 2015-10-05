@@ -3,6 +3,7 @@
 namespace tdt4237\webapp\validation;
 
 use tdt4237\webapp\models\User;
+use tdt4237\webapp\Auth;
 
 class RegistrationFormValidation
 {
@@ -27,7 +28,10 @@ class RegistrationFormValidation
 
     private function validate($username, $password, $fullname, $address, $postcode)
     {
-        if(strlen($username) < 2)
+        if($this->Auth->isUser($username)){
+            $this->validationErrors[] = 'Username already taken';
+        }
+        else if(strlen($username) < 2)
         {   
             $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
         }
