@@ -59,7 +59,7 @@ class PostController extends Controller
             $comment->setText($this->app->request->post("text"));
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
-            $this->commentRepository->save($comment);
+            $this->commentRepository->save(htmlspecialchars($comment, ENT_QUOTES, 'UTF-8'));;
             $this->app->redirect('/posts/' . $postId);
         }
         else {
