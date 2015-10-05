@@ -33,7 +33,7 @@ class Auth
             return false;
         }
 
-        return $this->hash->check($password, $user->getHash());
+        return $this->hash->check($password, $user->getHash(), $user->getSalt());
     }
 
     /**
@@ -76,7 +76,8 @@ class Auth
     public function isAdmin()
     {
         if ($this->check()) {
-            return $_COOKIE['isadmin'] === 'yes';
+            $user=$_SESSION['user'];
+           return $this->user()->isAdmin();
         }
 
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
@@ -84,8 +85,13 @@ class Auth
 
     public function logout()
     {
-        if($this->guest()) {
+        if($this->check()) {
+
+           
             session_destroy();
+            if ( isset( $_COOKIE[session_name()] ) )
+            setcookie( session_name(), "", time()-3600, "/" );
+           // setcookie("PHPSESSID","",time()-3600,"/");
         }
     }
 

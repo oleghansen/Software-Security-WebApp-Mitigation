@@ -32,6 +32,7 @@ class UserController extends Controller
         $request  = $this->app->request;
         $username = $request->post('user');
         $password = $request->post('pass');
+        $salt = $this->hash->generateSalt();
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
@@ -41,8 +42,9 @@ class UserController extends Controller
 
         if ($validation->isGoodToGo()) {
             $password = $password;
-            $password = $this->hash->make($password);
-            $user = new User($username, $password, $fullname, $address, $postcode);
+            $password = $this->hash->make($password, $salt);
+            $user = new User($username, $password, $salt, $fullname, $address, $postcode);
+            echo "test " . $user->getSalt();
             $this->userRepository->save($user);
 
             $this->app->flash('info', 'Thanks for creating a user. Now log in.');
@@ -56,15 +58,21 @@ class UserController extends Controller
 
     public function all()
     {
-        $this->render('users.twig', [
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){ 
+          $this->render('users.twig', [
             'users' => $this->userRepository->all()
-        ]);
+          ]);
+        }
+        else{
+          $this->app->redirect("/");  
+        }
     }
 
     public function logout()
     {
         $this->auth->logout();
-        $this->app->redirect('http://google.com');
+        $this->app->redirect('http://localhost:8080/', 301);
     }
 
     public function show($username)
@@ -73,21 +81,25 @@ class UserController extends Controller
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
 
-        } else {
+        } 
+        else {
             $user = $this->userRepository->findByUser($username);
-
+            $isAdmin = $this->auth->user()->isAdmin();
             if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
                     'user' => $user,
                     'username' => $username
                 ]);
-            } else if ($this->auth->check()) {
-
+            }
+            else if($isAdmin){
                 $this->render('showuserlite.twig', [
                     'user' => $user,
                     'username' => $username
                 ]);
+            }
+            else {
+                $this->app->redirect("/");
             }
         }
     }
