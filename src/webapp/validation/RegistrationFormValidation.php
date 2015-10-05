@@ -27,6 +27,14 @@ class RegistrationFormValidation
 
     private function validate($username, $password, $fullname, $address, $postcode)
     {
+        if(strlen($username) < 2)
+        {   
+            $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
+        }
+        else if(strlen($username) > 10)
+        {
+            $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
+        }
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';
         }

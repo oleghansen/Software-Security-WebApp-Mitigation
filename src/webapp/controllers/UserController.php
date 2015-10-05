@@ -37,7 +37,7 @@ class UserController extends Controller
         $address = $request->post('address');
         $postcode = $request->post('postcode');
 
-
+//test
         $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
 
         if ($validation->isGoodToGo()) {
