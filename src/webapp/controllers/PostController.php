@@ -56,10 +56,10 @@ class PostController extends Controller
 
             $comment = new Comment();
             $comment->setAuthor($_SESSION['user']);
-            $comment->setText($this->app->request->post("text"));
+            $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
-            $this->commentRepository->save(htmlspecialchars($comment, ENT_QUOTES, 'UTF-8'));;
+            $this->commentRepository->save($comment);
             $this->app->redirect('/posts/' . $postId);
         }
         else {
@@ -99,8 +99,8 @@ class PostController extends Controller
             if ($validation->isGoodToGo()) {
                 $post = new Post();
                 $post->setAuthor($author);
-                $post->setTitle($title);
-                $post->setContent($content);
+                $post->setTitle(htmlspecialchars("$title", ENT_QUOTES, 'UTF-8'));
+                $post->setContent(htmlspecialchars("$content", ENT_QUOTES, 'UTF-8'));
                 $post->setDate($date);
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
