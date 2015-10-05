@@ -37,14 +37,20 @@ class UserController extends Controller
         $address = $request->post('address');
         $postcode = $request->post('postcode');
 
+
+         if($this->auth->isUser($username)){
+            $this->app->flashNow('info','Username already exists');
+
+            return $this->render('newUserForm.twig', ['username' => $username]);
+         }   
 //test
+
         $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
 
         if ($validation->isGoodToGo()) {
             $password = $password;
             $password = $this->hash->make($password, $salt);
             $user = new User($username, $password, $salt, $fullname, $address, $postcode);
-            echo "test " . $user->getSalt();
             $this->userRepository->save($user);
 
             $this->app->flash('info', 'Thanks for creating a user. Now log in.');

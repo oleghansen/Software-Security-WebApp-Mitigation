@@ -4,6 +4,7 @@ namespace tdt4237\webapp\validation;
 
 use tdt4237\webapp\models\User;
 
+
 class RegistrationFormValidation
 {
     const MIN_USER_LENGTH = 3;
@@ -27,6 +28,7 @@ class RegistrationFormValidation
 
     private function validate($username, $password, $fullname, $address, $postcode)
     {
+       
         if(strlen($username) < 2)
         {   
             $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
