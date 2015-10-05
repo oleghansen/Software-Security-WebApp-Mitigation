@@ -17,6 +17,7 @@ class User
     protected $age;
     protected $bankcard;
     protected $isAdmin = 0;
+    protected $creditcard = null;
 
     function __construct($username, $hash, $salt, $fullname, $address, $postcode)
     {
@@ -132,6 +133,15 @@ class User
     {
         $this->isAdmin = $isAdmin;
         return $this;
+    }
+
+    public function setCredticard($credticard) {
+        $this->$credticard = $credticard;
+        return $this;
+    }
+
+    public function getCreditcard() {
+        return $this->creditcard;
     }
 
 }
