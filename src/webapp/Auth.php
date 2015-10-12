@@ -25,6 +25,16 @@ class Auth
         $this->hash           = $hash;
     }
 
+    public function isUser($username){
+        $user = $this->userRepository->findByUser($username);
+
+        if($user === false)
+            return false;
+
+        return true;
+    }
+
+
     public function checkCredentials($username, $password)
     {
         $user = $this->userRepository->findByUser($username);
@@ -33,7 +43,7 @@ class Auth
             return false;
         }
 
-        return $this->hash->check($password, $user->getHash(), $user->getSalt());
+        return $this->hash->check($password, $user->getHash());
     }
 
     /**

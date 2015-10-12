@@ -11,18 +11,16 @@ class User
     protected $address;
     protected $postcode;
     protected $hash;
-    protected $salt;
     protected $email   = null;
     protected $bio     = 'Bio is empty.';
     protected $age;
     protected $bankcard;
     protected $isAdmin = 0;
 
-    function __construct($username, $hash, $salt, $fullname, $address, $postcode)
+    function __construct($username, $hash, $fullname, $address, $postcode)
     {
         $this->username = $username;
         $this->hash = $hash;
-        $this->salt = $salt;
         $this->fullname = $fullname;
         $this->address = $address;
         $this->postcode = $postcode;
@@ -41,10 +39,6 @@ class User
     public function getHash()
     {
         return $this->hash;
-    }
-
-    public function getSalt() {
-        return $this->salt;
     }
 
     public function getEmail()
@@ -105,7 +99,8 @@ class User
         return $this;
     }
 
-    public function setHash($hash) {
+    public function setHash($hash)
+    {
         $this->hash = $hash;
         return $this;
     }
