@@ -6,6 +6,7 @@ if (! extension_loaded('openssl')) {
     die('You must enable the openssl extension.');
 }
 
+session_set_cookie_params(0, $httponly=True);
 session_cache_limiter(false);
 session_start();
 
