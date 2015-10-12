@@ -92,7 +92,7 @@ class UserController extends Controller
         else {
             $user = $this->userRepository->findByUser($username);
             $isAdmin = $this->auth->user()->isAdmin();
-            if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
+            if ($user != false && $user->getUsername() === $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
                     'user' => $user,
