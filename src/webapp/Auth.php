@@ -43,7 +43,7 @@ class Auth
             return false;
         }
 
-        return $this->hash->check($password, $user->getHash(), $user->getSalt());
+        return $this->hash->check($password, $user->getHash());
     }
 
     /**

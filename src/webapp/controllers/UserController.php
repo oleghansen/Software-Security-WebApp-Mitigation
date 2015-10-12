@@ -32,7 +32,6 @@ class UserController extends Controller
         $request  = $this->app->request;
         $username = $request->post('user');
         $password = $request->post('pass');
-        $salt = $this->hash->generateSalt();
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
@@ -49,8 +48,10 @@ class UserController extends Controller
 
         if ($validation->isGoodToGo()) {
             $password = $password;
-            $password = $this->hash->make($password, $salt);
-            $user = new User($username, $password, $salt, $fullname, $address, $postcode);
+
+            $password = $this->hash->make($password);
+            $user = new User($username, $password, $fullname, $address, $postcode);
+
             $this->userRepository->save($user);
 
             $this->app->flash('info', 'Thanks for creating a user. Now log in.');
