@@ -1,5 +1,4 @@
 <?php
-
 namespace tdt4237\webapp\repository;
 
 use PDO;
@@ -33,16 +32,16 @@ class PostRepository
 
     public function find($postId)
     {
-        $sql  = "SELECT * FROM posts WHERE postId = $postId";
-        $result = $this->db->query($sql);
-        $row = $result->fetch();
+       
+            $sql  = "SELECT * FROM posts WHERE postId = $postId";
+            $result = $this->db->query($sql);
+            $row = $result->fetch();
 
-        if($row === false) {
-            return false;
-        }
+            if($row === false) {
+              return false;
+            }
+            return $this->makeFromRow($row);
 
-
-        return $this->makeFromRow($row);
     }
 
     public function all()
@@ -80,8 +79,12 @@ class PostRepository
 
     public function deleteByPostid($postId)
     {
-        return $this->db->exec(
+        
+            return $this->db->exec(
             sprintf("DELETE FROM posts WHERE postid='%s';", $postId));
+        
+
+        
     }
 
 
@@ -91,6 +94,8 @@ class PostRepository
         $author = $post->getAuthor();
         $content = $post->getContent();
         $date    = $post->getDate();
+
+
 
         if ($post->getPostId() === null) {
             $query = "INSERT INTO posts (title, author, content, date) "

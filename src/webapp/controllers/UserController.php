@@ -133,7 +133,7 @@ class UserController extends Controller
         $address = $request->post('address');
         $postcode = $request->post('postcode');
 
-        $validation = new EditUserFormValidation($email, $bio, $age);
+        $validation = new EditUserFormValidation($email, $bio, $age,$fullname,$address,$postcode);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
