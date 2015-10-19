@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL); // endret verdi fra E_ALL til 0
+error_reporting(0); // endret verdi fra E_ALL til 0
 ini_set('display_errors', 'on');
 
 if (! extension_loaded('openssl')) {
