@@ -47,6 +47,9 @@ class EditUserFormValidation
     
     private function validateEmail($email)
     {
+        if(!preg_match('/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/', $email)) {
+            $this->validationErrors[] = "Invalid email";
+        }
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->validationErrors[] = "Invalid email format on email";
         }

@@ -28,7 +28,7 @@ class RegistrationFormValidation
 
     private function validate($username, $password, $fullname, $address, $postcode)
     {
-        if(!preg_match('/^[a-zA-Z0-9]{2,10}$/', $username)) {
+        if(!preg_match('/^[a-zA-Z0-9 ]{2,10}$/', $username)) {
             $this->validationErrors[] = 'Username is invalid';
         }
         if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $password)) {
@@ -37,7 +37,7 @@ class RegistrationFormValidation
         if(!preg_match('/^[a-zA-Z ]{2,50}$/', $fullname)) {
             $this->validationErrors[] = "Please write in your full name. No symbols!";
         }
-        if(!preg_match('/^[a-zA-Z0-9]{2,70}$/', $address)) {
+        if(!preg_match('/^[a-zA-Z0-9 ]{2,70}$/', $address)) {
             $this->validationErrors[] = "Please write in your address. No symbols!";
         }
         if(!preg_match('/^[0-9]{4}$/', $postcode)) {
