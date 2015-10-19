@@ -1,7 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block content %}
-    <h3> {{ flash.msg|raw }}</h3>
+    <h3> {{ flash.msg }}</h3>
     {% if post %}
         <h2>{{ post.title}}</h2>
         <h3> by {{post.author|raw}}</h3>
@@ -11,7 +11,7 @@
         {% for comment in comments %}
             <div class="review">
                 <b>Author:</b> {{ comment.author }} <b> posted on: {{ comment.date }} </b>
-                <pre> {{ comment.text|raw }}</pre>
+                <pre> {{ comment.text }}</pre>
             </div>
         {% else %}
             <br>
@@ -23,6 +23,7 @@
         <p>Comment: </p>
         <form method="post" action="">
             <textarea cols="40" rows="10" name="text" ></textarea> <br />
+            <input type="text" name="str" value="{{userStr}}" hidden />
             <input type="submit" value="Submit comment" name="submit"></button>
         </form>
 

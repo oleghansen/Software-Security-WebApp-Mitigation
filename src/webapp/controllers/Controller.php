@@ -24,6 +24,7 @@ class Controller
     protected function render($template, $variables = [])
     {
         if ($this->auth->check()) {
+            $variables['userStr'] = $_SESSION['randStr'];
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
