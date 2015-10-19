@@ -127,7 +127,7 @@ class UserRepository
     public function saveExistingUser(User $user)
     {
         $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId(), $user->isDoctor(), $user->getBankcard()
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->isDoctor(), $user->getBankcard(), $user->getUserId()
         );
 
         return $this->pdo->exec($query);

@@ -128,6 +128,7 @@ class UserController extends Controller
         $request = $this->app->request;
         $email   = $request->post('email');
         $bio     = $request->post('bio');
+        $bankcard = $request->post('bankcard');
         $age     = $request->post('age');
         $fullname = $request->post('fullname');
         $address = $request->post('address');
@@ -138,6 +139,7 @@ class UserController extends Controller
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
             $user->setBio($bio);
+            $user->setBankcard($bankcard);
             $user->setAge(new Age($age));
             $user->setFullname($fullname);
             $user->setAddress($address);
