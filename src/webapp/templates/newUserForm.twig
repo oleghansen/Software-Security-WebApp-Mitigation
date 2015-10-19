@@ -26,11 +26,11 @@
 
     function validateUserName() {
 
-        var regex = /^[a-zA-Z0-9]{2,20}/;
+        var regex = /^[a-zA-Z0-9]{2,10}/;
 
         var OK = regex.test(document.getElementById("user").value);
         if(!OK) {
-            document.getElementById("feil").innerHTML ="Brukernavn må inneholde mellom 2 og 20 bokstaver og tall.";
+            document.getElementById("feil").innerHTML ="UserName can only contain between 2 and 10 letters and numbers";
             return false;
         }
         return true;
@@ -42,7 +42,7 @@
         var OK = regex.test(document.getElementById("pass").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="Passord må innehold minst ett tall, en stor bokstav og en liten bokstav med lengde 8 eller mer.";
+            document.getElementById("feil").innerHTML ="Password must contain atleast one number, one uppercase and a lowercase letter, and with length 8 or longer.";
             return false;    
         }
         return true;
@@ -53,7 +53,7 @@
         var OK = regex.test(document.getElementById("fullname").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="Navn må inneholde mellom 2 og 50 bokstaver.";
+            document.getElementById("feil").innerHTML ="FullName need to contain between 2 and 50 letters.";
             return false;
         }
         return true;
@@ -65,7 +65,7 @@
         var OK = regex.test(document.getElementById("address").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="Addresse må inneholde mellom 2 og 70 bokstaver og tall.";
+            document.getElementById("feil").innerHTML ="Address need to contain between 2 and 70 numbers and letters.";
             return false;
         }
         return true;
@@ -77,7 +77,7 @@
         var OK = regex.test(document.getElementById("postcode").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="Postkoden må inneholde 4 tall.";
+            document.getElementById("feil").innerHTML ="The areacode/postcode must contain 4 numbers";
             return false;
         }
         return true;

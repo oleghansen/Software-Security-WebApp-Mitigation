@@ -29,9 +29,7 @@ class CommentRepository
         $date = (string) $comment->getDate();
         $postid = $comment->getPost();
 
-
-
-        if ($comment->getCommentId() === null) {
+        if ($comment->getCommentId() === null ) {
             $query = "INSERT INTO comments (author, text, date, belongs_to_post) "
                 . "VALUES ('$author', '$text', '$date', '$postid')";
             return $this->db->exec($query);
@@ -40,10 +38,11 @@ class CommentRepository
 
     public function findByPostId($postId)
     {
-        $query   = "SELECT * FROM comments WHERE belongs_to_post = $postId";
-        $rows = $this->db->query($query)->fetchAll();
 
-        return array_map([$this, 'makeFromRow'], $rows);
+            $query   = "SELECT * FROM comments WHERE belongs_to_post = $postId";
+            $rows = $this->db->query($query)->fetchAll();
+            return array_map([$this, 'makeFromRow'], $rows);
+
     }
 
     public function makeFromRow($row)

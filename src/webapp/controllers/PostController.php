@@ -6,6 +6,7 @@ use tdt4237\webapp\models\Post;
 use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
+use tdt4237\webapp\validation\AddCommentValidation;
 
 class PostController extends Controller
 {
@@ -53,14 +54,21 @@ class PostController extends Controller
     {
 
         if(!$this->auth->guest()) {
+            $content = htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8');
+            $validation = new AddCommentValidation($_SESSION['user'],$content);
 
-            $comment = new Comment();
-            $comment->setAuthor($_SESSION['user']);
-            $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
-            $comment->setDate(date("dmY"));
-            $comment->setPost($postId);
-            $this->commentRepository->save($comment);
-            $this->app->redirect('/posts/' . $postId);
+            if($validation->isGoodToGo()){
+                $comment = new Comment();
+                $comment->setAuthor($_SESSION['user']);
+                $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
+                $comment->setDate(date("dmY"));
+                $comment->setPost($postId);
+                $this->commentRepository->save($comment);
+                $this->app->redirect('/posts/' . $postId);
+            }else
+                $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+            
+            
         }
         else {
             $this->app->redirect('/login');

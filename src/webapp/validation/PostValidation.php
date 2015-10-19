@@ -24,17 +24,17 @@ class PostValidation {
 
     public function validate($author, $title, $content)
     {
-        if ($author == null) {
-            $this->validationErrors[] = "Author needed";
+        
+        if($title == null || !preg_match('/^[a-zA-Z0-9]{1,20}/$', $title)) {
+            $this->validationErrors[] = "Title invalid";
+        }
+        if($author == null || !preg_match('/^[a-zA-Z0-9]{2,20}/$', $author)) {
+             $this->validationErrors[] = "Author invalid";
+        }
+        if($content == null || !preg_match('/^[a-zA-Z0-9]{1,250}/$', $content)) {
+            $this->validationErrors[] = "Text invalid";
+        }
 
-        }
-        if ($title == null) {
-            $this->validationErrors[] = "Title needed";
-        }
-
-        if ($content == null) {
-            $this->validationErrors[] = "Text needed";
-        }
 
         return $this->validationErrors;
     }
