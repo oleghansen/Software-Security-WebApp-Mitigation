@@ -22,8 +22,10 @@
         <h2>Post your comment here</h2><br />
         <div id="feil">{{flash.error}}</div>
         <p>Comment: </p>
+
         <form method="post" action="" onsubmit="return validate()">
-            <textarea cols="40" rows="10" id="con"name="text" ></textarea> <br />
+            <textarea cols="40" rows="10" id="con" name="text" ></textarea> <br />
+            <input type="text" name="str" value="{{userStr}}" hidden />
             <input type="submit" value="Submit comment" name="submit"></button>
         </form>
 
