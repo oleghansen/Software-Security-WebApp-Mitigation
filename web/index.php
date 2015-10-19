@@ -10,6 +10,8 @@ session_set_cookie_params(0, $httponly=True);
 session_cache_limiter(false);
 session_start();
 
+session_regenerate_id(True);
+
 if (preg_match('/\.(?:png|jpg|jpeg|gif|txt|css|js)$/', $_SERVER["REQUEST_URI"]))
     return false; // serve the requested resource as-is.
 else {
