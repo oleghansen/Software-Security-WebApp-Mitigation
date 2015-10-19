@@ -17,7 +17,8 @@ class Sql
      */
     static function up()
     {
-        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, user VARCHAR(50), pass VARCHAR(60), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode varchar (4), age varchar(50), bio varhar(50), isadmin INTEGER), doctor_Sallery INTEGER, has_Payed, INTEGER;";
+
+        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, user VARCHAR(50), pass VARCHAR(60), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode varchar (4), age varchar(50), bio varhar(50), isadmin INTEGER, isdoctor INTEGER default 0, bankcard varchar(12) default null, doctor_Sallery INTEGER, has_Payed, INTEGER);";
         $q6 = "CREATE TABLE posts (postId INTEGER PRIMARY KEY AUTOINCREMENT, author TEXT, title TEXT NOT NULL, content TEXT NOT NULL, date TEXT NOT NULL, doctor_Post INTEGER, doctor_Answer INTEGER, FOREIGN KEY(author) REFERENCES users(user));";
         $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, author TEXT NOT NULL, text INTEGER NOT NULL, belongs_to_post INTEGER NOT NULL, FOREIGN KEY(belongs_to_post) REFERENCES posts(postId));";
 
@@ -38,9 +39,9 @@ class Sql
         $hash2 = Hash::make('bobdylan');
         $hash3 = Hash::make('liverpool');
 
-        $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090')";
-        $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010')";
-        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120')";
+        $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, isdoctor) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090', 0)";
+        $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, isdoctor) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010', 1)";
+        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, isdoctor) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120', 0)";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
