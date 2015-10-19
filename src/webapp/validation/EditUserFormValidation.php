@@ -30,17 +30,17 @@ class EditUserFormValidation
         $this->validateAddress($address);
     }
     private function validateFullname($fullname) {
-        if(!preg_match('/^[a-zA-Z]{2,50}/$', $fullname)) {
+        if(!preg_match('/^[a-zA-Z ]{2,50}$/', $fullname)) {
             $this->validationErrors[] = "Invalid symbols in fullname";
         }
     }
     private function validateAddress($address) {
-        if(!preg_match('/^[a-zA-Z0-9]{2,70}/$', $address)) {
+        if(!preg_match('/^[a-zA-Z0-9 ]{2,70}$/', $address)) {
             $this->validationErrors[] = "Invalid address.";
         }
     }
     private function validatePostcode($postcode) {
-        if(!preg_match('/^[0-9]{4}/$', $postcode)) {
+        if(!preg_match('/^[0-9]{4}$/', $postcode)) {
             $this->validationErrors[] = "Postcode can not be empty. Invalid symbols.";
         }
     }
@@ -54,7 +54,7 @@ class EditUserFormValidation
     
     private function validateAge($age)
     {
-        if(!preg_match('/^[0-9]{1,3}/$', $age)) {
+        if(!preg_match('/^[0-9]{1,3}$/', $age)) {
             $this->validationErrors[] = 'Age is invalid.';
         }
         if (! is_numeric($age) or $age < 0 or $age > 130) {
@@ -64,7 +64,7 @@ class EditUserFormValidation
 
     private function validateBio($bio)
     {   
-        if(!preg_match('/^[a-zA-Z0-9]{1,250}/', $bio)) {
+        if(!preg_match('/^[a-zA-Z0-9]{1,250}$/', $bio)) {
             $this->validationErrors[] = 'Bio contains invalid symbols.';
         }
         if (empty($bio)) {

@@ -26,20 +26,15 @@ class AddCommentValidation {
     public function validate($author,$content) {
 
 
-    	if(!preg_match('/^[a-zA-Z0-9]{2,20}/$', $author)) {
+    	if($author == null || !preg_match('/^[a-zA-Z0-9]{2,20}$/', $author)) {
              $this->validationErrors[] = "Author invalid";
         }
-        if ($author == null) {
-            $this->validationErrors[] = "Author needed";
-
-        }
-        if(!preg_match('/^[a-zA-Z0-9]{1,250}/$', $content)) {
+        
+        if($content == null || !preg_match('/^[a-zA-Z0-9]{1,250}$/', $content)) {
             $this->validationErrors[] = "Text invalid";
         }
-        if ($content == null) {
-            $this->validationErrors[] = "Text needed";
-        }
 
+        return $this->validationErrors;
     }
 
 }

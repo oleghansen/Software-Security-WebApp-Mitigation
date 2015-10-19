@@ -25,13 +25,13 @@ class PostValidation {
     public function validate($author, $title, $content)
     {
         
-        if($title == null || !preg_match('/^[a-zA-Z0-9]{1,20}/$', $title)) {
+        if($title == null || !preg_match('/^[a-zA-Z0-9]{1,20}$/', $title)) {
             $this->validationErrors[] = "Title invalid";
         }
-        if($author == null || !preg_match('/^[a-zA-Z0-9]{2,20}/$', $author)) {
+        if($author == null || !preg_match('/^[a-zA-Z0-9]{2,20}$/', $author)) {
              $this->validationErrors[] = "Author invalid";
         }
-        if($content == null || !preg_match('/^[a-zA-Z0-9]{1,250}/$', $content)) {
+        if($content == null || !preg_match('/^[a-zA-Z0-9]{1,250}$/', $content)) {
             $this->validationErrors[] = "Text invalid";
         }
 

@@ -63,19 +63,24 @@ class PostController extends Controller
     {
 
         if(!$this->auth->guest()) {
-            $content = htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8');
+            $content = $this->app->request->post("text");
             $validation = new AddCommentValidation($_SESSION['user'],$content);
+            $post = $this->postRepository->find($postId);
+            $comments = $this->commentRepository->findByPostId($postId);
 
             if($validation->isGoodToGo()){
                 $comment = new Comment();
                 $comment->setAuthor($_SESSION['user']);
-                $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
+                $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
                 $comment->setDate(date("dmY"));
                 $comment->setPost($postId);
                 $this->commentRepository->save($comment);
                 $this->app->redirect('/posts/' . $postId);
-            }else
-                $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+            }else {
+                $errors = join("<br>\n", $validation->getValidationErrors());
+                $this->app->flashNow('error', $errors);
+                $this->render('showpost.twig',['post' => $post,'comments'=> $comments,'error'=>$errors]);
+            }
             
             
         }
