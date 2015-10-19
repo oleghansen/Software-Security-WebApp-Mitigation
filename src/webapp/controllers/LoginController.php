@@ -31,8 +31,10 @@ class LoginController extends Controller
         $pass    = $request->post('pass');
 
         if ($this->auth->checkCredentials($user, $pass)) {
+            $rand = rand(40, 55);
+            $randString = $this->generateRandomString($rand);
+            $_SESSION['randStr'] = $randString;
             $_SESSION['user'] = $user;
-         
             $this->app->flash('info', "You are now successfully logged in as $user.");
             $this->app->redirect('/');
             return;
@@ -41,4 +43,8 @@ class LoginController extends Controller
         $this->app->flashNow('error', 'Incorrect user/pass combination.');
         $this->render('login.twig', []);
     }
+    
+    public function generateRandomString($length) {
+       return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+   }
 }
