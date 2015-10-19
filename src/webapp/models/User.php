@@ -17,6 +17,7 @@ class User
     protected $bankcard;
     protected $isAdmin = 0;
     protected $isDoctor = 0;
+    protected $balance = 0;
 
     function __construct($username, $hash, $fullname, $address, $postcode)
     {
@@ -63,6 +64,18 @@ class User
 
     public function getFullname() {
         return $this->fullname;
+    }
+
+    public function getBalance() {
+        return $this->balance;
+    }
+
+    public function addBalance($balance) {
+        $this->balance += $balance;
+    }
+
+    public function setBalance($balance) {
+        $this->balance = $balance;
     }
 
     public function setFullname($fullname) {

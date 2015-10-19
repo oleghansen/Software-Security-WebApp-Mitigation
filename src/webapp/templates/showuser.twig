@@ -39,8 +39,15 @@
             <tr></tr>
             <th>Age:</th>
             <td>{{ user.age }}</td>
+            <tr></tr>
             <th>Doctor</th>
             <td>{{ user.isdoctor }}</td>
+            {% if user.isdoctor == 1 %}
+            <th>Earned</th>
+            {% else %}
+            <th>Spent</th>
+            {% endif %}
+            <td> {{ user.balance }}</td>
             <tr></tr>
     </table>
 {% else %}
