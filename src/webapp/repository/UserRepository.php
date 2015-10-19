@@ -81,13 +81,15 @@ class UserRepository
         );
     }
 
-    public function usernametoDoctor($username){
-        $user=findByUser($username);
+    public function usernameToDoctor($username){
+        $user=$this->findByUser($username);
 
         $user->setIsDoctor(1);
+        $query = sprintf(
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId(), $user->isDoctor(), $user->getBankcard()
+        );
 
-        return $user->isDoctor();
-
+        return $this->pdo->exec($query);
     }
 
 
@@ -116,7 +118,7 @@ class UserRepository
     public function saveNewUser(User $user)
     {
         $query = sprintf(
-            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode()
+            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->isDoctor(), $user->getBankcard()
         );
 
         return $this->pdo->exec($query);
@@ -125,7 +127,7 @@ class UserRepository
     public function saveExistingUser(User $user)
     {
         $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId()
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId(), $user->isDoctor(), $user->getBankcard()
         );
 
         return $this->pdo->exec($query);

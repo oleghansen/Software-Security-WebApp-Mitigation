@@ -33,7 +33,7 @@ class AdminController extends Controller
 
     public function usernameToDoctor($username)
     {
-        if($this->userRepository->userToDoctor($username))
+        if($this->userRepository->usernameToDoctor($username) === 1)
         {
             $this->app->flash('info',"Sucessfully promoted '$username' to doctor");
             $this->app->redirect('/admin');
