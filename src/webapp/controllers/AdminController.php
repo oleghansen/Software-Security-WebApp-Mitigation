@@ -46,10 +46,16 @@ class AdminController extends Controller
 
     public function delete($username)
     {
-        if ($this->userRepository->deleteByUsername($username) === 1) {
-            $this->app->flash('info', "Sucessfully deleted '$username'");
-            $this->app->redirect('/admin');
-            return;
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){
+            if ($this->userRepository->deleteByUsername($username) === 1) {
+                $this->app->flash('info', "Sucessfully deleted '$username'");
+                $this->app->redirect('/admin');
+                return;
+            }
+        }
+        else{
+           $this->app->redirect('/'); 
         }
         
         $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
@@ -58,13 +64,20 @@ class AdminController extends Controller
 
     public function deletePost($postId)
     {
-        if ($this->postRepository->deleteByPostid($postId) === 1) {
-            $this->app->flash('info', "Sucessfully deleted '$postId'");
-            $this->app->redirect('/admin');
-            return;
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){
+            if ($this->postRepository->deleteByPostid($postId) === 1) {
+                $this->app->flash('info', "Sucessfully deleted '$postId'");
+                $this->app->redirect('/admin');
+                return;
+            }
+        }
+        else{
+          $this->app->redirect('/');  
         }
 
         $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
         $this->app->redirect('/admin');
     }
+
 }

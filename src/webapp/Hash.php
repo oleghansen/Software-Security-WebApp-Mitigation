@@ -7,8 +7,6 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 class Hash
 {
 
-    static $salt = "1234";
-
 
     public function __construct()
     {

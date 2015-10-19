@@ -18,34 +18,43 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = $this->postRepository->all();
+        if ($this->auth->guest()) {
+            $this->app->flash("info", "You must be logged in to do that");
+            $this->app->redirect("/login");
 
-        $posts->sortByDate();
-        $this->render('posts.twig', ['posts' => $posts]);
+        }
+        else{
+            $posts = $this->postRepository->all();
+            $posts->sortByDate();
+            $this->render('posts.twig', ['posts' => $posts]);
+        }
     }
 
     public function show($postId)
     {
-        $post = $this->postRepository->find($postId);
-        $comments = $this->commentRepository->findByPostId($postId);
-        $request = $this->app->request;
-        $message = $request->get('msg');
-        $variables = [];
-
-
-        if($message) {
-            $variables['msg'] = $message;
+        if ($this->auth->guest()) {
+            $this->app->flash("info", "You must be logged in to do that");
+            $this->app->redirect("/login");
 
         }
+        else{
+            $post = $this->postRepository->find($postId);
+            $comments = $this->commentRepository->findByPostId($postId);
+            $request = $this->app->request;
+            $message = $request->get('msg');
+            $variables = [];
 
+            if($message) {
+                $variables['msg'] = $message;
 
+            }
 
-
-        $this->render('showpost.twig', [
-            'post' => $post,
-            'comments' => $comments,
-            'flash' => $variables
-        ]);
+            $this->render('showpost.twig', [
+                'post' => $post,
+                'comments' => $comments,
+                'flash' => $variables
+            ]);
+        }
 
     }
 
@@ -73,8 +82,7 @@ class PostController extends Controller
     {
 
         if ($this->auth->check()) {
-            $username = $_SESSION['user'];
-            $this->render('createpost.twig', ['username' => $username]);
+            $this->render('createpost.twig');
         } else {
 
             $this->app->flash('error', "You need to be logged in to create a post");
@@ -92,10 +100,10 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
-            $author = $request->post('author');
+            $author = $this->auth->getUsername();
             $date = date("dmY");
 
-            $validation = new PostValidation($title, $author, $content);
+            $validation = new PostValidation($author, $title, $content);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
                 $post->setAuthor(htmlspecialchars("$author", ENT_QUOTES, 'UTF-8'));
@@ -105,12 +113,10 @@ class PostController extends Controller
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
             }
-        }
-
-            $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-            $this->app->render('createpost.twig');
+            $this->app->flash('error', join('<br>', $validation->getValidationErrors()));
+            $this->app->redirect("/posts/new");
             // RENDER HERE
-
+        }
     }
 }
 
