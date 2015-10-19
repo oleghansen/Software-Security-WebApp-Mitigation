@@ -84,9 +84,9 @@ class UserRepository
     public function usernameToDoctor($username){
         $user=$this->findByUser($username);
 
-        $user->setIsDoctor(1);
+       // $user->setIsDoctor(1);
         $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId(), $user->isDoctor(), $user->getBankcard()
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), 1, $user->getBankcard(), $user->getUserId()
         );
 
         return $this->pdo->exec($query);

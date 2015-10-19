@@ -98,7 +98,7 @@ class User
 
     public function isDoctor()
     {
-        return $this->isDoctor ==='1';
+        return $this->isDoctor;
     }
 
     public function setUserId($userId)

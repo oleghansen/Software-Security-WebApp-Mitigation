@@ -39,6 +39,9 @@ class AdminController extends Controller
             $this->app->redirect('/admin');
             return;
         }
+            $this->app->flash('info', "'$username' could not be promoted, sorry dude.");
+            $this->app->redirect('/admin');
+     
     }
 
     public function delete($username)
