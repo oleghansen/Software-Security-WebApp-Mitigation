@@ -34,9 +34,9 @@
 
     function validateContent() {
     
-        var regex = /^[a-zA-Z0-9]{1,250}/;
+        var regex = /^[a-zA-Z0-9 ]{1,250}/;
         var OK = regex.test(document.getElementById("cont").value);
-        alert(OK);
+
         if(!OK) {
         document.getElementById("feil").innerHTML ="Content can not be empty. Illegal sybol used."
         return false;
@@ -65,10 +65,7 @@
         
             OK = false;
         }
-        if(!validateAuthor()) {
-        
-            OK = false;
-        }
+
         
         return OK;
     }

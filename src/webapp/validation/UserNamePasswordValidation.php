@@ -17,7 +17,7 @@ class UserNamePasswordValidation {
     }
     public function validateUserName($username) {
 
-        if(!preg_match('/^[a-zA-Z0-9 ]{2,10}$/', $username)) {
+        if(!preg_match('/^[a-zA-Z0-9 ]{2,20}$/', $username)) {
             $this->validationErrors[] = 'Username is invalid';
             return false;
         }
@@ -34,15 +34,15 @@ class UserNamePasswordValidation {
     }
 
     public function validateLoginPassword($password) {
-    	/*if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{,50}$/', $password)) {
+    	if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{1,50}/', $password)) {
     		$this->validationErrors[]="Invalid password";
     		return false;
-    	}*/
+    	}
     	return true;
     }
 
     public function validatePostId($postid) {
-    	if(!preg_match('/^[0-9]{1.3}$/', $postid)) {
+    	if(!preg_match('/^[0-9]{1,3}$/', $postid)) {
     		$this->validationErrors[] = "Invalid id";
     		return false;
     	}

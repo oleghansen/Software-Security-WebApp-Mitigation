@@ -27,8 +27,14 @@ class PostController extends Controller
         }
         else{
             $posts = $this->postRepository->all();
-            $posts->sortByDate();
-            $this->render('posts.twig', ['posts' => $posts]);
+           
+            if($posts != null) {
+                $posts->sortByDate();
+                $this->render('posts.twig', ['posts' => $posts]);    
+            }else {
+                $this->render('posts.twig', ['posts' => $posts]);
+            }
+            
         }
 
         session_regenerate_id(True);
@@ -70,25 +76,27 @@ class PostController extends Controller
     {
 
         if(!$this->auth->guest()) {
-            $content = $this->app->request->post("text");
-            $validation = new AddCommentValidation($_SESSION['user'],$content);
-            $post = $this->postRepository->find($postId);
-            $comments = $this->commentRepository->findByPostId($postId);
+            $valpostId = new UserNamePasswordValidation();
+            if($valpostId->validatePostId($postId)) {
+                $content = $this->app->request->post("text");
+                $validation = new AddCommentValidation($_SESSION['user'],$content);
+                $post = $this->postRepository->find($postId);
+                $comments = $this->commentRepository->findByPostId($postId);
 
-            if($validation->isGoodToGo()){
-                $comment = new Comment();
-                $comment->setAuthor($_SESSION['user']);
-                $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
-                $comment->setDate(date("dmY"));
-                $comment->setPost($postId);
-                $this->commentRepository->save($comment);
-                $this->app->redirect('/posts/' . $postId);
-            }else {
-                $errors = join("<br>\n", $validation->getValidationErrors());
-                $this->app->flashNow('error', $errors);
-                $this->render('showpost.twig',['post' => $post,'comments'=> $comments,'error'=>$errors]);
+                if($validation->isGoodToGo()){
+                    $comment = new Comment();
+                    $comment->setAuthor($_SESSION['user']);
+                    $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+                    $comment->setDate(date("dmY"));
+                    $comment->setPost($postId);
+                    $this->commentRepository->save($comment);
+                    $this->app->redirect('/posts/' . $postId);
+                }else {
+                    $errors = join("<br>\n", $validation->getValidationErrors());
+                    $this->app->flashNow('error', $errors);
+                    $this->render('showpost.twig',['post' => $post,'comments'=> $comments,'error'=>$errors]);
+                }
             }
-            
             
         }
         else {

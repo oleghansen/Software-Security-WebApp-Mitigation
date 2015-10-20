@@ -7,7 +7,7 @@
 {{ flash.error}} <br />
 {{ flash.success }}
 <div id="feil"></div>
-<form action="" method="POST" onsubmit="">
+<form action="" method="POST" onsubmit="return validate()">
 
 <label>Username: </label>
 <input type="text" id="user" name="user"> <br />
@@ -30,7 +30,7 @@
         return true;
     }
     function validatePassword(){
-        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}/;
         var OK = regex.test(document.getElementById("pass").value);
 
         if(!OK) {
@@ -41,11 +41,17 @@
     }
 
 	function validate() {
+
+
 	var OK = true;
 
 	if(!validateUserName()){
 		OK = false;
 	}
+
+    if(!validatePassword()) {
+        OK = false;
+    }
 
 	return OK;
 	}

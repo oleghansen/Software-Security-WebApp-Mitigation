@@ -93,7 +93,7 @@ class UserController extends Controller
         } 
         else {
             $validation = new UserNamePasswordValidation();
-            if($validation->validateUserName($username)) {
+           // if($validation->validateUserName($username)) {
                 $user = $this->userRepository->findByUser($username);
                 $isAdmin = $this->auth->user()->isAdmin();
                 if ($user != false && $user->getUsername() === $this->auth->getUsername()) {
@@ -112,7 +112,7 @@ class UserController extends Controller
                 else {
                     $this->app->redirect("/");
                 }
-            }
+            //}
             
         }
     }
