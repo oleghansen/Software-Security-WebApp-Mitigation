@@ -33,7 +33,7 @@ class LoginController extends Controller
         $pass    = $request->post('pass');
          	
         // Time Attack 1
-        if ($PHP_OS === "Linux" ) {
+        if (stristr(PHP_OS, 'LINUX')) {
         	$oldTime = system('date +%s%N');
         } else {
         	$oldTime = microtime(True);
@@ -50,7 +50,7 @@ class LoginController extends Controller
         }
         
         // Time Attack 2
-        if ($PHP_OS === "Linux" ) {
+        if (stristr(PHP_OS, 'LINUX')) {
         	time_nanosleep(0, $oldTime - system('date +%s%N')
         			+ $totalSecondsWait * 1000000000);
         } else {
