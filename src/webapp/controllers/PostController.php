@@ -30,6 +30,8 @@ class PostController extends Controller
             $posts->sortByDate();
             $this->render('posts.twig', ['posts' => $posts]);
         }
+
+        session_regenerate_id(True);
     }
 
     public function show($postId)

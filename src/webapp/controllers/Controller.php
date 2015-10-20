@@ -28,8 +28,6 @@ class Controller
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
-
-            session_regenerate_id(True);
         }
 
         print $this->app->render($template, $variables);

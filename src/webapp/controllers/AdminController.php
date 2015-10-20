@@ -24,6 +24,8 @@ class AdminController extends Controller
             $this->app->redirect('/');
         }
 
+        session_regenerate_id(True);
+
         $variables = [
             'users' => $this->userRepository->all(),
             'posts' => $this->postRepository->all()

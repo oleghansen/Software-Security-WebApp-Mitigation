@@ -79,6 +79,7 @@ class UserController extends Controller
 
     public function logout()
     {
+    	session_regenerate_id(True);
         $this->auth->logout();
         $this->app->redirect('http://localhost:8080/', 301);
     }

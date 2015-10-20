@@ -26,9 +26,19 @@ class LoginController extends Controller
 
     public function login()
     {
+    	$totalSecondsWait = 1;
+    	
         $request = $this->app->request;
         $user    = $request->post('user');
         $pass    = $request->post('pass');
+        $PHP_OS ="";
+         	
+        // Time Attack 1
+        if ($PHP_OS === "Linux" ) {
+        	$oldTime = system('date +%s%N');
+        } else {
+        	$oldTime = microtime(True);
+        }
         $validation = new UserNamePasswordValidation();
         if($validation->validateUserName($user) && $validation->validateLoginPassword($pass)) {
             if ($this->auth->checkCredentials($user, $pass)) {
@@ -42,6 +52,14 @@ class LoginController extends Controller
             }
         }
         
+        // Time Attack 2
+        if ($PHP_OS === "Linux" ) {
+        	time_nanosleep(0, $oldTime - system('date +%s%N')
+        			+ $totalSecondsWait * 1000000000);
+        } else {
+        	usleep($oldTime - microtime(True) 
+        			+ $totalSecondsWait * 1000000);
+        }
         
         $this->app->flashNow('error', 'Incorrect user/pass combination.');
         $this->render('login.twig', []);
