@@ -31,7 +31,7 @@ class RegistrationFormValidation
         if(!preg_match('/^[a-zA-Z0-9 ]{2,10}$/', $username)) {
             $this->validationErrors[] = 'Username is invalid';
         }
-        if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $password)) {
+        if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/', $password)) {
             $this->validationErrors[] = 'Invalid password';
         }
         if(!preg_match('/^[a-zA-Z ]{2,50}$/', $fullname)) {

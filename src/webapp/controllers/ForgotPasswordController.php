@@ -33,7 +33,8 @@ class ForgotPasswordController extends Controller {
     }
 
     function confirmForm($username) {
-        if($username != "") {
+        $validation = new UserNamePasswordValidation();
+        if($username != "" && $validation->validateUserName($username)) {
             $user = $this->userRepository->findByUser($username);
             $this->render('forgotPasswordConfirm.twig', ['user' => $user]);
         }

@@ -7,6 +7,7 @@ use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
 use tdt4237\webapp\validation\AddCommentValidation;
+use tdt4237\webapp\validation\UserNamePasswordValidation;
 
 class PostController extends Controller
 {
@@ -39,22 +40,26 @@ class PostController extends Controller
 
         }
         else{
-            $post = $this->postRepository->find($postId);
-            $comments = $this->commentRepository->findByPostId($postId);
-            $request = $this->app->request;
-            $message = $request->get('msg');
-            $variables = [];
+            $validation = new UserNamePasswordValidation();
+            if($validation->validatePostId($postId)) {
+                $post = $this->postRepository->find($postId);
+                $comments = $this->commentRepository->findByPostId($postId);
+                $request = $this->app->request;
+                $message = $request->get('msg');
+                $variables = [];
 
-            if($message) {
-                $variables['msg'] = $message;
+                if($message) {
+                    $variables['msg'] = $message;
 
+                }
+
+                $this->render('showpost.twig', [
+                    'post' => $post,
+                    'comments' => $comments,
+                    'flash' => $variables
+                ]);    
             }
-
-            $this->render('showpost.twig', [
-                'post' => $post,
-                'comments' => $comments,
-                'flash' => $variables
-            ]);
+            
         }
 
     }

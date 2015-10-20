@@ -6,6 +6,7 @@ use tdt4237\webapp\models\Age;
 use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
+use tdt4237\webapp\validation\UserNamePasswordValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
 
 class UserController extends Controller
@@ -90,24 +91,28 @@ class UserController extends Controller
 
         } 
         else {
-            $user = $this->userRepository->findByUser($username);
-            $isAdmin = $this->auth->user()->isAdmin();
-            if ($user != false && $user->getUsername() === $this->auth->getUsername()) {
+            $validation = new UserNamePasswordValidation();
+            if($validation->validateUserName($username)) {
+                $user = $this->userRepository->findByUser($username);
+                $isAdmin = $this->auth->user()->isAdmin();
+                if ($user != false && $user->getUsername() === $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
                     'user' => $user,
                     'username' => $username
                 ]);
-            }
-            else if($isAdmin){
-                $this->render('showuserlite.twig', [
+                }
+                else if($isAdmin){
+                    $this->render('showuserlite.twig', [
                     'user' => $user,
                     'username' => $username
-                ]);
+                    ]);
+                }
+                else {
+                    $this->app->redirect("/");
+                }
             }
-            else {
-                $this->app->redirect("/");
-            }
+            
         }
     }
 
