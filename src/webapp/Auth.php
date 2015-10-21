@@ -37,10 +37,12 @@ class Auth
 
     public function checkCredentials($username, $password)
     {
-        if(!preg_match('/^[a-zA-Z0-9 ]{2,20}$/', $username)) {
+        if(!preg_match('/^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/', $username)) {
+
+
             return false;
         }
-        if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $password)) {
+        if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/', $password)) {
             return false;
         }
         $user = $this->userRepository->findByUser($username);
@@ -97,6 +99,20 @@ class Auth
         }
 
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
+    }
+
+    public function isDoctor()
+    {
+        if ($this->check()) {
+            $user=$_SESSION['user'];
+            return $this->user()->isDoctor();
+        }
+
+        throw new Exception('Not logged in but called Auth::isDoctor() anyway');
+    }
+
+    public function hasBankcard() {
+
     }
 
     public function logout()

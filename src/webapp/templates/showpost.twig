@@ -3,7 +3,7 @@
 {% block content %}
     <h3> {{ flash.msg }}</h3>
     {% if post %}
-        <h2>{{ post.title}}</h2>
+        <h2>{{ post.title}} {% if post.doctorAnswered == 1 %} - Answered by doctor {% endif %}</h2>
         <h3> by {{post.author|raw}}</h3>
         <p> {{ post.content }}</p>
         <lb></lb>
@@ -37,11 +37,11 @@
 
     function validateComment() {
 
-        var regex = /^[a-zA-Z0-9]{1,250}/;
+        var regex = /^[a-zA-Z0-9.]{1}[a-zA-Z0-9.? \s]{1,249}$/;
         var OK = regex.test(document.getElementById("con").value);
         
         if(!OK) {
-        document.getElementById("feil").innerHTML ="Content can not be empty. Illegal sybol used."
+        document.getElementById("feil").innerHTML ="Content can not be empty/start with whitespace. Illegal sybol used."
         return false;
         }
         return true;

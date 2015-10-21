@@ -18,7 +18,7 @@ class PostRepository
         $this->db = $db;
     }
     
-    public static function create($id, $author, $title, $content, $date)
+    public static function create($id, $author, $title, $content, $date, $doctorPost, $doctorAnswered)
     {
         $post = new Post;
         
@@ -27,7 +27,9 @@ class PostRepository
             ->setAuthor($author)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+            ->setDoctorPost($doctorPost)
+            ->setDoctorAnswered($doctorAnswered);
     }
 
     public function find($postId)
@@ -64,6 +66,25 @@ class PostRepository
         );
     }
 
+    public function doctorPost() {
+        $sql   = "SELECT * FROM posts WHERE doctor_Post = 1";
+        $results = $this->db->query($sql);
+
+        if($results === false) {
+            return [];
+            throw new \Exception('PDO error in posts all()');
+        }
+
+        $fetch = $results->fetchAll();
+        if(count($fetch) == 0) {
+            return false;
+        }
+
+        return new PostCollection(
+            array_map([$this, 'makeFromRow'], $fetch)
+        );
+    }
+
     public function makeFromRow($row)
     {
         return static::create(
@@ -71,7 +92,9 @@ class PostRepository
             $row['author'],
             $row['title'],
             $row['content'],
-            $row['date']
+            $row['date'],
+            $row['doctor_Post'],
+            $row['doctor_Answered']
         );
 
        //  $this->db = $db;
@@ -94,15 +117,28 @@ class PostRepository
         $author = $post->getAuthor();
         $content = $post->getContent();
         $date    = $post->getDate();
+        $doctorPost = $post->getDoctorPost();
+        $doctorAnswered = $post->getDoctorAnswered();
 
 
 
         if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES ('$title', '$author', '$content', '$date')";
+            $query = "INSERT INTO posts (title, author, content, date, doctor_Post, doctor_Answered) "
+                . "VALUES ('$title', '$author', '$content', '$date', '$doctorPost', '$doctorAnswered')";
         }
 
         $this->db->exec($query);
         return $this->db->lastInsertId();
+    }
+
+    public function updatePost(Post $post) {
+        $DoctorAnswered = $post->getDoctorAnswered();
+        $postId = $post->getPostId();
+
+        if ($post->getPostId() != null) {
+            $query = "UPDATE posts SET doctor_Answered = $DoctorAnswered WHERE postId = $postId";
+        }
+
+        return $this->db->exec($query);
     }
 }

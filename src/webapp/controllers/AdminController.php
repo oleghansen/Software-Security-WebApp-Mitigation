@@ -34,6 +34,36 @@ class AdminController extends Controller
         $this->render('admin.twig', $variables);
     }
 
+    public function usernameToDoctor()
+    {
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){
+            $request = $this->app->request;
+            $username = $request->post('User');
+            $usrStr = $request->post('str');
+            if($usrStr === $_SESSION['randStr'])
+            {
+                if($this->userRepository->usernameToDoctor($username) === 1)
+                {
+                    $this->app->flash('info',"Sucessfully promoted '$username' to doctor");
+                    $this->app->redirect('/admin');
+                    return;
+                }
+                    $this->app->flash('info', "'$username' could not be promoted, sorry dude.");
+                    $this->app->redirect('/admin');
+            }
+            else{
+                //Report possible CSRF attack
+                return $this->app->redirect('/');
+            }
+                
+        }
+        else{
+           $this->app->redirect('/'); 
+        }
+     
+    }
+
     public function delete()
     {   
         $isAdmin = $this->auth->user()->isAdmin();

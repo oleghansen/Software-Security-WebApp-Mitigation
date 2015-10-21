@@ -92,6 +92,8 @@ $app->get('/logout', $ns . 'UserController:logout')->name('logout');
 $app->get('/admin', $ns . 'AdminController:index')->name('admin');
 $app->post('/admin/delete/post', $ns . 'AdminController:deletepost');
 $app->post('/admin/delete/user', $ns . 'AdminController:delete');
+$app->post('/admin/userToDoctor/', $ns . 'AdminController:usernameToDoctor');
+
 
 
 return $app;

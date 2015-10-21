@@ -31,11 +31,24 @@
             <th>Email:</th>
             <td>{{ user.email }}</td>
             <tr></tr>
+            <th>Bank card:</th>
+            <td>{{ user.bankcard }}</td>
+            <tr></tr>
             <th>Bio:</th>
             <td>{{ user.bio}}</td>
             <tr></tr>
             <th>Age:</th>
             <td>{{ user.age }}</td>
+            <tr></tr>
+            <th>Doctor</th>
+            <td>{{ user.isdoctor }}</td>
+            <tr></tr>
+            {% if user.isdoctor == 1 %}
+            <th>Earned</th>
+            {% else %}
+            <th>Spent</th>
+            {% endif %}
+            <td> {{ user.balance }}</td>
             <tr></tr>
     </table>
 {% else %}

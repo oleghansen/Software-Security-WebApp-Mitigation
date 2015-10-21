@@ -21,10 +21,19 @@
             <td><input type="text" name="str" value="{{userStr}}" hidden /></td>
             <td><input type="submit" name="submit" value="Delete this user"></td>
         </tr>
-
    
     </table>
     </form>
+    <form action="/admin/userToDoctor" method="POST">
+           {% if user.isdoctor == 1 %}
+              {{ user.username }} is Doctor
+           {% else %}
+             <input type="text" name="User" value="{{ user.username }}" hidden/>
+             <input type="text" name="str" value="{{userStr}}" hidden />
+             <input type="submit" name="submit" value="Promote {{ user.username }} to doctor">
+           {% endif %}
+    </form>
+                
  {% endfor %}
 {% else %}
     The users table is empty.

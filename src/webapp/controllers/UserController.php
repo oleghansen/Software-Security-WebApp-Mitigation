@@ -132,6 +132,7 @@ class UserController extends Controller
         $user = $this->auth->user();
 
         $request = $this->app->request;
+
         $usrStr = $request->post('str');
         if($usrStr === $_SESSION['randStr'])
         { 
@@ -141,6 +142,7 @@ class UserController extends Controller
             $fullname = $request->post('fullname');
             $address = $request->post('address');
             $postcode = $request->post('postcode');
+            $bankcard = $request->post('bankcard');
 
             $validation = new EditUserFormValidation($email, $bio, $age,$fullname,$address,$postcode);
 
@@ -151,6 +153,7 @@ class UserController extends Controller
                 $user->setFullname($fullname);
                 $user->setAddress($address);
                 $user->setPostcode($postcode);
+                $user->setBankcard($bankcard);
                 $this->userRepository->save($user);
 
                 $this->app->flashNow('info', 'Your profile was successfully saved.');
@@ -159,6 +162,7 @@ class UserController extends Controller
         }else{
             //Report possible CSRF attack
             return $this->app->redirect('/');
+
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
