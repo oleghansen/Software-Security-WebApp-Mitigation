@@ -10,59 +10,52 @@ use tdt4237\webapp\validation\PostValidation;
 use tdt4237\webapp\validation\AddCommentValidation;
 use tdt4237\webapp\validation\UserNamePasswordValidation;
 
-class PostController extends Controller
-{
+class PostController extends Controller {
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
 
-    public function index()
-    {
+    public function index() {
         if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
 
-        }
-        elseif($this->auth->isDoctor()) {
+        } elseif ($this->auth->isDoctor()) {
             $posts = $this->postRepository->doctorPost();
             $posts->sortByDate();
             $this->render('posts.twig', ['posts' => $posts]);
-        }
-        else{
+        } else {
             $posts = $this->postRepository->all();
-           
-            if($posts != null) {
+
+            if ($posts != null) {
                 $posts->sortByDate();
-                $this->render('posts.twig', ['posts' => $posts]);    
-            }else {
+                $this->render('posts.twig', ['posts' => $posts]);
+            } else {
                 $this->render('posts.twig', ['posts' => $posts]);
             }
-            
+
         }
 
         session_regenerate_id(True);
     }
 
-    public function show($postId)
-    {
+    public function show($postId) {
         if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
 
-        }
-        else{
+        } else {
             $validation = new UserNamePasswordValidation();
-            if($validation->validatePostId($postId)) {
+            if ($validation->validatePostId($postId)) {
                 $post = $this->postRepository->find($postId);
                 $comments = $this->commentRepository->findByPostId($postId);
                 $request = $this->app->request;
                 $message = $request->get('msg');
                 $variables = [];
 
-                if($message) {
+                if ($message) {
                     $variables['msg'] = $message;
 
                 }
@@ -71,22 +64,21 @@ class PostController extends Controller
                     'post' => $post,
                     'comments' => $comments,
                     'flash' => $variables
-                ]);    
+                ]);
             }
-            
+
         }
 
     }
 
-    public function addComment($postId)
-    {
+    public function addComment($postId) {
 
 
-        if($this->auth->isDoctor()){
+        if ($this->auth->isDoctor()) {
 
-        $content = $this->app->request->post("text");
+            $content = $this->app->request->post("text");
             $usrStr = $this->app->request->post("str");
-            if($usrStr === $_SESSION['randStr']) {
+            if ($usrStr === $_SESSION['randStr']) {
                 $valpostId = new UserNamePasswordValidation();
                 if ($valpostId->validatePostId($postId)) {
 
@@ -96,7 +88,7 @@ class PostController extends Controller
 
                     if ($validation->isGoodToGo()) {
                         $comment = new Comment();
-                        $comment->setAuthor($_SESSION['user']);
+                        $comment->setAuthor($_SESSION['user']." [DOCTOR]");
                         $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
                         $comment->setDate(date("dmY"));
                         $comment->setPost($postId);
@@ -116,50 +108,50 @@ class PostController extends Controller
                             $this->userRepository->saveExistingUser($userDoctor);
                             $this->userRepository->saveExistingUser($userPoster);
                         }
+                        $this->app->redirect('/posts/' . $postId);
                     }
-
-
-                } elseif (!$this->auth->guest()) {
-
-                    $content = $this->app->request->post("text");
-                    $usrStr = $this->app->request->post("str");
-                    if ($usrStr === $_SESSION['randStr']) {
-                        $valpostId = new UserNamePasswordValidation();
-                        if ($valpostId->validatePostId($postId)) {
-
-                            $validation = new AddCommentValidation($_SESSION['user'], $content);
-                            $post = $this->postRepository->find($postId);
-                            $comments = $this->commentRepository->findByPostId($postId);
-
-                            if ($validation->isGoodToGo()) {
-                                $comment = new Comment();
-                                $comment->setAuthor($_SESSION['user']);
-                                $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
-                                $comment->setDate(date("dmY"));
-                                $comment->setPost($postId);
-                                $this->commentRepository->save($comment);
-                                $this->app->redirect('/posts/' . $postId);
-                            } else {
-                                $errors = join("<br>\n", $validation->getValidationErrors());
-                                $this->app->flashNow('error', $errors);
-                                $this->render('showpost.twig', ['post' => $post, 'comments' => $comments, 'error' => $errors]);
-                            }
-                        }
-                    } else {
-                        //report possible CSRF attack
-                        $this->app->redirect('/');
-                    }
-
-                } else {
-                    $this->app->redirect('/login');
-                    $this->app->flash('info', 'you must log in to do that');
                 }
-            }}}
+            }
+
+        } elseif (!$this->auth->guest()) {
+
+            $content = $this->app->request->post("text");
+            $usrStr = $this->app->request->post("str");
+            if ($usrStr === $_SESSION['randStr']) {
+                $valpostId = new UserNamePasswordValidation();
+                if ($valpostId->validatePostId($postId)) {
+
+                    $validation = new AddCommentValidation($_SESSION['user'], $content);
+                    $post = $this->postRepository->find($postId);
+                    $comments = $this->commentRepository->findByPostId($postId);
+
+                    if ($validation->isGoodToGo()) {
+                        $comment = new Comment();
+                        $comment->setAuthor($_SESSION['user']);
+                        $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+                        $comment->setDate(date("dmY"));
+                        $comment->setPost($postId);
+                        $this->commentRepository->save($comment);
+                        $this->app->redirect('/posts/' . $postId);
+                    } else {
+                        $errors = join("<br>\n", $validation->getValidationErrors());
+                        $this->app->flashNow('error', $errors);
+                        $this->render('showpost.twig', ['post' => $post, 'comments' => $comments, 'error' => $errors]);
+                    }
+                }
+            } else {
+                //report possible CSRF attack
+                $this->app->redirect('/');
+            }
+
+        } else {
+            $this->app->redirect('/login');
+            $this->app->flash('info', 'you must log in to do that');
+        }
+    }
 
 
-
-    public function showNewPostForm()
-    {
+    public function showNewPostForm() {
 
         if ($this->auth->check()) {
             $this->render('createpost.twig', ['user' => $this->auth->user()]);
@@ -171,18 +163,15 @@ class PostController extends Controller
 
     }
 
-    public function create()
-    {
+    public function create() {
         if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged on to create a post");
             $this->app->redirect("/login");
-        } 
-        else {
+        } else {
             $request = $this->app->request;
 
             $usrStr = $request->post('str');
-            if($usrStr === $_SESSION['randStr'])
-            {    
+            if ($usrStr === $_SESSION['randStr']) {
                 $title = $request->post('title');
                 $content = $request->post('content');
 
@@ -197,17 +186,16 @@ class PostController extends Controller
                     $post->setContent(htmlspecialchars("$content", ENT_QUOTES, 'UTF-8'));
                     $post->setDate($date);
 
-                    if(isset($_POST['showtodoctor'])) {
-                    $post->setDoctorPost(1);
-                } else {
-                    $post->setDoctorPost(0);
-                }
+                    if (isset($_POST['showtodoctor'])) {
+                        $post->setDoctorPost(1);
+                    } else {
+                        $post->setDoctorPost(0);
+                    }
 
                     $savedPost = $this->postRepository->save($post);
                     $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
                 }
-            }
-            else{
+            } else {
                 //report possible CSRF attack
                 return $this->app->redirect('/');
 
