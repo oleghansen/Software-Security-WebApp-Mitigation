@@ -67,6 +67,7 @@ class Post
 
     public function setDoctorPost($doctorPost) {
         $this->doctorPost = $doctorPost;
+        return $this;
     }
 
     public function getDoctorPost() {
@@ -75,6 +76,7 @@ class Post
 
     public function setDoctorAnswered($doctorAnswered) {
         $this->doctorAnswered = $doctorAnswered;
+        return $this;
     }
 
     public function getDoctorAnswered() {

@@ -52,8 +52,8 @@ class Sql
     }
 
     static function insertPosts() {
-        $q4 = "INSERT INTO posts(author, date, title, content) VALUES ('bob', '26082015', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?')";
-        $q5 = "INSERT INTO posts(author, date, title, content) VALUES ('bjarni', '26082015', 'I also have a problem', 'I generally fear very much for my health')";
+        $q4 = "INSERT INTO posts(author, date, title, content, doctor_Post, doctor_Answered) VALUES ('bob', '26082015', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?',0,0)";
+        $q5 = "INSERT INTO posts(author, date, title, content, doctor_Post, doctor_Answered) VALUES ('bjarni', '26082015', 'I also have a problem', 'I generally fear very much for my health', 1, 0)";
 
         self::$pdo->exec($q4);
         self::$pdo->exec($q5);

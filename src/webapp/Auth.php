@@ -93,6 +93,16 @@ class Auth
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
     }
 
+    public function isDoctor()
+    {
+        if ($this->check()) {
+            $user=$_SESSION['user'];
+            return $this->user()->isDoctor();
+        }
+
+        throw new Exception('Not logged in but called Auth::isDoctor() anyway');
+    }
+
     public function logout()
     {
         if($this->check()) {

@@ -23,6 +23,11 @@ class PostController extends Controller
             $this->app->redirect("/login");
 
         }
+        elseif($this->auth->isDoctor()) {
+            $posts = $this->postRepository->doctorPost();
+            $posts->sortByDate();
+            $this->render('posts.twig', ['posts' => $posts]);
+        }
         else{
             $posts = $this->postRepository->all();
             $posts->sortByDate();
