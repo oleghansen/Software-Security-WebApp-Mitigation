@@ -126,26 +126,32 @@ class UserController extends Controller
         $user = $this->auth->user();
 
         $request = $this->app->request;
-        $email   = $request->post('email');
-        $bio     = $request->post('bio');
-        $age     = $request->post('age');
-        $fullname = $request->post('fullname');
-        $address = $request->post('address');
-        $postcode = $request->post('postcode');
+        $usrStr = $request->post('str');
+        if($usrStr === $_SESSION['randStr'])
+        { 
+            $email   = $request->post('email');
+            $bio     = $request->post('bio');
+            $age     = $request->post('age');
+            $fullname = $request->post('fullname');
+            $address = $request->post('address');
+            $postcode = $request->post('postcode');
 
-        $validation = new EditUserFormValidation($email, $bio, $age,$fullname,$address,$postcode);
+            $validation = new EditUserFormValidation($email, $bio, $age,$fullname,$address,$postcode);
 
-        if ($validation->isGoodToGo()) {
-            $user->setEmail(new Email($email));
-            $user->setBio($bio);
-            $user->setAge(new Age($age));
-            $user->setFullname($fullname);
-            $user->setAddress($address);
-            $user->setPostcode($postcode);
-            $this->userRepository->save($user);
+            if ($validation->isGoodToGo()) {
+                $user->setEmail(new Email($email));
+                $user->setBio($bio);
+                $user->setAge(new Age($age));
+                $user->setFullname($fullname);
+                $user->setAddress($address);
+                $user->setPostcode($postcode);
+                $this->userRepository->save($user);
 
-            $this->app->flashNow('info', 'Your profile was successfully saved.');
-            return $this->render('edituser.twig', ['user' => $user]);
+                $this->app->flashNow('info', 'Your profile was successfully saved.');
+                return $this->render('edituser.twig', ['user' => $user]);
+            }
+        }else{
+            //Report possible CSRF attack
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
