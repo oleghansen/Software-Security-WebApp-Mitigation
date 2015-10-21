@@ -22,7 +22,7 @@
     <script type="text/javascript">
 
     function validateTitle() {
-        var regex = /^[a-zA-Z0-9]{1,20}/;
+        var regex = /^[a-zA-Z0-9 ?]{1,20}/;
         var OK = regex.test(document.getElementById("title").value);
 
         if(!OK) {
@@ -34,7 +34,7 @@
 
     function validateContent() {
     
-        var regex = /^[a-zA-Z0-9 ]{1,250}/;
+        var regex = /^[a-zA-Z0-9 .]{1,250}/;
         var OK = regex.test(document.getElementById("cont").value);
 
         if(!OK) {
@@ -45,7 +45,7 @@
     }
 
     function validateAuthor() {
-        var regex = /^[a-zA-Z0-9]{2,10}/;
+        var regex = /^[a-zA-Z0-9]{2,20}/;
         var OK = regex.test(document.getElementById("author").value);
         if(!OK) {
             document.getElementById("feil").innerHTML ="Invalid symbols in Author.";

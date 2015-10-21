@@ -28,7 +28,7 @@ class RegistrationFormValidation
 
     private function validate($username, $password, $fullname, $address, $postcode)
     {
-        if(!preg_match('/^[a-zA-Z0-9 ]{2,10}$/', $username)) {
+        if(!preg_match('/^[a-zA-Z0-9 ]{2,20}$/', $username)) {
             $this->validationErrors[] = 'Username is invalid';
         }
         if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/', $password)) {
@@ -46,11 +46,11 @@ class RegistrationFormValidation
        
         if(strlen($username) < 2)
         {   
-            $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
+            $this->validationErrors[] = 'Username must be between 2 and 20 characters long';
         }
-        else if(strlen($username) > 10)
+        else if(strlen($username) > 20)
         {
-            $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
+            $this->validationErrors[] = 'Username must be between 2 and 20 characters long';
         }
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';

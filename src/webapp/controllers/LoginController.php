@@ -31,7 +31,7 @@ class LoginController extends Controller
         $request = $this->app->request;
         $user    = $request->post('user');
         $pass    = $request->post('pass');
-        $PHP_OS ="";
+        
          	
         // Time Attack 1
         if (stristr(PHP_OS, 'LINUX')) {
