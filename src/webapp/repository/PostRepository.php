@@ -125,4 +125,15 @@ class PostRepository
         $this->db->exec($query);
         return $this->db->lastInsertId();
     }
+
+    public function updatePost(Post $post) {
+        $DoctorAnswered = $post->getDoctorAnswered();
+        $postId = $post->getPostId();
+
+        if ($post->getPostId() != null) {
+            $query = "UPDATE posts SET doctor_Answered = $DoctorAnswered WHERE postId = $postId";
+        }
+
+        return $this->db->exec($query);
+    }
 }

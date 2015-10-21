@@ -67,7 +67,35 @@ class PostController extends Controller
     public function addComment($postId)
     {
 
-        if(!$this->auth->guest()) {
+        if($this->auth->isDoctor()) {
+
+            $comment = new Comment();
+            $comment->setAuthor($_SESSION['user']);
+            $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
+            $comment->setDate(date("dmY"));
+            $comment->setPost($postId);
+
+            $post = $this->postRepository->find($postId);
+
+            if($post->getDoctorAnswered() != 1) {
+                $post->setDoctorAnswered(1);
+
+                $this->postRepository->updatePost($post);
+
+                $userDoctor = $this->userRepository->findByUser($_SESSION['user']);
+                $userPoster = $this->userRepository->findByUser($post->getAuthor());
+
+                $userDoctor->addBalance(7);
+                $userPoster->addBalance(10);
+
+                $this->userRepository->saveExistingUser($userDoctor);
+                $this->userRepository->saveExistingUser($userPoster);
+            }
+
+            $this->commentRepository->save($comment);
+            $this->app->redirect('/posts/' . $postId);
+        }
+        elseif(!$this->auth->guest()) {
 
             $comment = new Comment();
             $comment->setAuthor($_SESSION['user']);
