@@ -49,10 +49,16 @@ class AdminController extends Controller
 
     public function delete($username)
     {   
+
         $validation = new UserNamePasswordValidation();
         if($validation->validateUserName($username)) {
             $isAdmin = $this->auth->user()->isAdmin();
             if($isAdmin){
+                if($username === $this->auth->getUsername()) {
+                    $this->app->flash('info',"Can not delete yourself.");
+                    $this->app->redirect('/admin');
+                    return;
+                }
                 if ($this->userRepository->deleteByUsername($username) === 1) {
                     $this->app->flash('info', "Sucessfully deleted '$username'");
                     $this->app->redirect('/admin');

@@ -17,7 +17,7 @@ class UserNamePasswordValidation {
     }
     public function validateUserName($username) {
 
-        if(!preg_match('/^[a-zA-Z0-9 ]{2,20}$/', $username)) {
+        if(!preg_match('/^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/', $username)) {
             $this->validationErrors[] = 'Username is invalid';
             return false;
         }

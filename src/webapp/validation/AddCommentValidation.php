@@ -26,11 +26,11 @@ class AddCommentValidation {
     public function validate($author,$content) {
 
 
-    	if($author == null || !preg_match('/^[a-zA-Z0-9]{2,20}$/', $author)) {
+    	if($author == null || !preg_match('/^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/', $author)) {
              $this->validationErrors[] = "Author invalid";
         }
         
-        if($content == null || !preg_match('/^[a-zA-Z0-9 .]{1,250}$/', $content)) {
+        if($content == null || !preg_match('/^[a-zA-Z0-9.]{1}[a-zA-Z0-9.? \s]{1,249}$/', $content)) {
             $this->validationErrors[] = "Text invalid";
         }
 
