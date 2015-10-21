@@ -22,7 +22,7 @@
     <script type="text/javascript">
 
     function validateTitle() {
-        var regex = /^[a-zA-Z0-9 ?]{1,20}/;
+        var regex = /^[a-zA-Z0-9?]{1}[a-zA-Z0-9? ]{1,19}$/;
         var OK = regex.test(document.getElementById("title").value);
 
         if(!OK) {
@@ -34,18 +34,18 @@
 
     function validateContent() {
     
-        var regex = /^[a-zA-Z0-9 .]{1,250}/;
+        var regex = /^[a-zA-Z0-9.]{1}[a-zA-Z0-9.? \s]{1,249}$/;
         var OK = regex.test(document.getElementById("cont").value);
 
         if(!OK) {
-        document.getElementById("feil").innerHTML ="Content can not be empty. Illegal sybol used."
+        document.getElementById("feil").innerHTML ="Content can not be empty/start with whitespace. Illegal sybol used."
         return false;
         }
         return true;
     }
 
     function validateAuthor() {
-        var regex = /^[a-zA-Z0-9]{2,20}/;
+        var regex = /^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/;
         var OK = regex.test(document.getElementById("author").value);
         if(!OK) {
             document.getElementById("feil").innerHTML ="Invalid symbols in Author.";

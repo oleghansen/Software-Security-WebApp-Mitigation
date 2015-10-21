@@ -21,7 +21,7 @@
 
     function validateUserName() {
 
-    	var regex = /^[a-zA-Z0-9]{2,20}/;
+    	var regex = /^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/;
         var OK = regex.test(document.getElementById("user").value);
         if(!OK) {
             document.getElementById("feil").innerHTML ="Invalid username or password";
@@ -30,7 +30,7 @@
         return true;
     }
     function validatePassword(){
-        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}/;
+        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/;
         var OK = regex.test(document.getElementById("pass").value);
 
         if(!OK) {
