@@ -3,7 +3,7 @@
 {% block content %}
     <h3> {{ flash.msg }}</h3>
     {% if post %}
-        <h2>{{ post.title}} - {% if post.doctorAnswered == 1 %} Answered by doctor {% endif %}</h2>
+        <h2>{{ post.title}} {% if post.doctorAnswered == 1 %} - Answered by doctor {% endif %}</h2>
         <h3> by {{post.author|raw}}</h3>
         <p> {{ post.content }}</p>
         <lb></lb>

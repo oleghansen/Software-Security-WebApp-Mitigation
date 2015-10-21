@@ -70,7 +70,7 @@ class PostController extends Controller
         if($this->auth->isDoctor()) {
 
             $comment = new Comment();
-            $comment->setAuthor($_SESSION['user']);
+            $comment->setAuthor($_SESSION['user']." [DOCTOR]");
             $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
