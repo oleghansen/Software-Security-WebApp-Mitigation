@@ -16,7 +16,7 @@ class LoginController extends Controller
     {
         if ($this->auth->check()) {
             $username = $this->auth->user()->getUsername();
-            $this->app->flash('info', 'You are already logged in as ' . $username);
+            $this->app->flash('info', 'Hello, You are already logged in as ' . $username);
             $this->app->redirect('/');
             return;
         }

@@ -30,12 +30,12 @@ class EditUserFormValidation
         $this->validateAddress($address);
     }
     private function validateFullname($fullname) {
-        if(!preg_match('/^[a-zA-Z ]{2,50}$/', $fullname)) {
+        if(!preg_match('/^[a-zA-Z]{1}[a-zA-Z ]{1,48}$/', $fullname)) {
             $this->validationErrors[] = "Invalid symbols in fullname";
         }
     }
     private function validateAddress($address) {
-        if(!preg_match('/^[a-zA-Z0-9 ]{2,70}$/', $address)) {
+        if(!preg_match('/^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,68}$/', $address)) {
             $this->validationErrors[] = "Invalid address.";
         }
     }
@@ -67,7 +67,7 @@ class EditUserFormValidation
 
     private function validateBio($bio)
     {   
-        if(!preg_match('/^[a-zA-Z0-9 .]{1,250}$/', $bio)) {
+        if(!preg_match('/^[a-zA-Z0-9.]{1}[a-zA-Z0-9. \s]{1,249}$/', $bio)) {
             $this->validationErrors[] = 'Bio contains invalid symbols.';
         }
         if (empty($bio)) {

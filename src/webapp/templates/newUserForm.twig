@@ -31,7 +31,7 @@
 
     function validateUserName() {
 
-        var regex = /^[a-zA-Z0-9]{2,20}/;
+        var regex = /^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/;
 
         var OK = regex.test(document.getElementById("user").value);
         if(!OK) {
@@ -44,7 +44,7 @@
 
     function validatePassword() {
 
-        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
         var OK = regex.test(document.getElementById("pass").value);
 
         if(!OK) {
@@ -56,7 +56,7 @@
     }
 
     function validateFullName() {
-        var regex = /^[a-zA-Z]{2,50}/;
+        var regex = /^[a-zA-Z]{1}[a-zA-Z ]{1,48}$/;
         var OK = regex.test(document.getElementById("fullname").value);
 
         if(!OK) {
@@ -69,7 +69,7 @@
 
     function validateAddress() {
 
-        var regex = /^[a-zA-Z0-9]{2,70}/;
+        var regex = /^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,68}$/;
         var OK = regex.test(document.getElementById("address").value);
 
         if(!OK) {
@@ -82,7 +82,7 @@
 
 
     function validatePostCode() {
-        var regex = /^[0-9]{4}/;
+        var regex = /^[0-9]{4}$/;
         var OK = regex.test(document.getElementById("postcode").value);
 
         if(!OK) {
