@@ -30,7 +30,7 @@ class AddCommentValidation {
              $this->validationErrors[] = "Author invalid";
         }
         
-        if($content == null || !preg_match('/^[a-zA-Z0-9]{1,250}$/', $content)) {
+        if($content == null || !preg_match('/^[a-zA-Z0-9 .]{1,250}$/', $content)) {
             $this->validationErrors[] = "Text invalid";
         }
 

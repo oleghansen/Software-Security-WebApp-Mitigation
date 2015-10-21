@@ -67,7 +67,7 @@ class EditUserFormValidation
 
     private function validateBio($bio)
     {   
-        if(!preg_match('/^[a-zA-Z0-9]{1,250}$/', $bio)) {
+        if(!preg_match('/^[a-zA-Z0-9 .]{1,250}$/', $bio)) {
             $this->validationErrors[] = 'Bio contains invalid symbols.';
         }
         if (empty($bio)) {

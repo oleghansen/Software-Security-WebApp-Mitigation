@@ -5,9 +5,12 @@
 <h2>New user</h2>
 
 <b>{{ flash.info}}</b> <br />
-<b>{{ flash.error }}</b> <br />
-<div id="feil"></div> <br />
-
+<b>{{ flash.error }}</b> 
+<div id="feilUser"></div> 
+<div id="feilPass"></div> 
+<div id="feilFullN"></div> 
+<div id="feilAdd"></div> 
+<div id="feilPost"></div> 
 <form action="" method="POST" onsubmit="return validate()">
     <label>Username: </label>
     <input type="text" id="user" name="user" value="{{ username }}" onChange="validateUserName();"> <br />
@@ -28,13 +31,14 @@
 
     function validateUserName() {
 
-        var regex = /^[a-zA-Z0-9]{2,10}/;
+        var regex = /^[a-zA-Z0-9]{2,20}/;
 
         var OK = regex.test(document.getElementById("user").value);
         if(!OK) {
-            document.getElementById("feil").innerHTML ="UserName can only contain between 2 and 10 letters and numbers";
+            document.getElementById("feilUser").innerHTML ="UserName can only contain between 2 and 10 letters and numbers.<br>";
             return false;
         }
+        document.getElementById("feilUser").innerHTML ="";
         return true;
     }
 
@@ -44,9 +48,10 @@
         var OK = regex.test(document.getElementById("pass").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="Password must contain atleast one number, one uppercase and a lowercase letter, and with length 8 or longer.";
+            document.getElementById("feilPass").innerHTML ="Password must contain atleast one number, one uppercase and a lowercase letter, and with length 8 or longer.<br>";
             return false;    
         }
+        document.getElementById("feilPass").innerHTML ="";
         return true;
     }
 
@@ -55,9 +60,10 @@
         var OK = regex.test(document.getElementById("fullname").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="FullName need to contain between 2 and 50 letters.";
+            document.getElementById("feilFullN").innerHTML ="FullName need to contain between 2 and 50 letters.<br>";
             return false;
         }
+        document.getElementById("feilFullN").innerHTML ="";
         return true;
     }
 
@@ -67,9 +73,10 @@
         var OK = regex.test(document.getElementById("address").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="Address need to contain between 2 and 70 numbers and letters.";
+            document.getElementById("feilAdd").innerHTML ="Address need to contain between 2 and 70 numbers and letters.<br>";
             return false;
         }
+        document.getElementById("feilAdd").innerHTML ="";
         return true;
     }
 
@@ -79,9 +86,10 @@
         var OK = regex.test(document.getElementById("postcode").value);
 
         if(!OK) {
-            document.getElementById("feil").innerHTML ="The areacode/postcode must contain 4 numbers";
+            document.getElementById("feilPost").innerHTML ="The areacode/postcode must contain 4 numbers.<br>";
             return false;
         }
+        document.getElementById("feilPost").innerHTML ="";
         return true;
     }
 
@@ -103,7 +111,7 @@
         if(!validatePostCode()) {
             OK = false;
         }
-        
+
         return OK;
     }
 </script>
