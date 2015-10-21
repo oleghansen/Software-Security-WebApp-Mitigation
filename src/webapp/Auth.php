@@ -38,6 +38,8 @@ class Auth
     public function checkCredentials($username, $password)
     {
         if(!preg_match('/^[a-zA-Z0-9]{1}[a-zA-Z0-9 ]{1,19}$/', $username)) {
+
+
             return false;
         }
         if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/', $password)) {
