@@ -153,6 +153,7 @@ class UserController extends Controller
             }
         }else{
             //Report possible CSRF attack
+            return $this->app->redirect('/');
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));

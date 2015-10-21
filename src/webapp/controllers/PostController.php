@@ -143,6 +143,7 @@ class PostController extends Controller
             }
             else{
                 //report possible CSRF attack
+                return $this->app->redirect('/');
             }
             $this->app->flash('error', join('<br>', $validation->getValidationErrors()));
             $this->app->redirect("/posts/new");
