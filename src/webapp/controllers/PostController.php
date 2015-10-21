@@ -103,7 +103,7 @@ class PostController extends Controller {
                             $userPoster = $this->userRepository->findByUser($post->getAuthor());
 
                             $userDoctor->addBalance(7);
-                            $userPoster->addBalance(10);
+                            $userPoster->addBalance(-10);
 
                             $this->userRepository->saveExistingUser($userDoctor);
                             $this->userRepository->saveExistingUser($userPoster);
