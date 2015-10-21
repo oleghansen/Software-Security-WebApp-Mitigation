@@ -3,7 +3,7 @@
 namespace tdt4237\webapp\controllers;
 
 use tdt4237\webapp\repository\UserRepository;
-
+use tdt4237\webapp\validation\UserNamePasswordValidation;
 class LoginController extends Controller
 {
 
@@ -31,6 +31,7 @@ class LoginController extends Controller
         $request = $this->app->request;
         $user    = $request->post('user');
         $pass    = $request->post('pass');
+        
          	
         // Time Attack 1
         if (stristr(PHP_OS, 'LINUX')) {
@@ -38,15 +39,17 @@ class LoginController extends Controller
         } else {
         	$oldTime = microtime(True);
         }
-
-        if ($this->auth->checkCredentials($user, $pass)) {
-            $rand = rand(40, 55);
-            $randString = $this->generateRandomString($rand);
-            $_SESSION['randStr'] = $randString;
-            $_SESSION['user'] = $user;
-            $this->app->flash('info', "You are now successfully logged in as $user.");
-            $this->app->redirect('/');
-            return;
+        $validation = new UserNamePasswordValidation();
+        if($validation->validateUserName($user) && $validation->validateLoginPassword($pass)) {
+            if ($this->auth->checkCredentials($user, $pass)) {
+                $rand = rand(40, 55);
+                $randString = $this->generateRandomString($rand);
+                $_SESSION['randStr'] = $randString;
+                $_SESSION['user'] = $user;
+                $this->app->flash('info', "You are now successfully logged in as $user.");
+                $this->app->redirect('/');
+                return;
+            }
         }
         
         // Time Attack 2
