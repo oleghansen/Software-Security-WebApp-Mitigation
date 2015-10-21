@@ -3,6 +3,7 @@
 namespace tdt4237\webapp\controllers;
 
 use tdt4237\webapp\models\Post;
+use tdt4237\webapp\models\User;
 use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
@@ -87,7 +88,7 @@ class PostController extends Controller
     {
 
         if ($this->auth->check()) {
-            $this->render('createpost.twig');
+            $this->render('createpost.twig', ['user' => $this->auth->user()]);
         } else {
 
             $this->app->flash('error', "You need to be logged in to create a post");
@@ -108,6 +109,8 @@ class PostController extends Controller
             $author = $this->auth->getUsername();
             $date = date("dmY");
 
+
+
             $validation = new PostValidation($author, $title, $content);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
@@ -115,6 +118,13 @@ class PostController extends Controller
                 $post->setTitle(htmlspecialchars("$title", ENT_QUOTES, 'UTF-8'));
                 $post->setContent(htmlspecialchars("$content", ENT_QUOTES, 'UTF-8'));
                 $post->setDate($date);
+
+                if(isset($_POST['showtodoctor'])) {
+                    $post->setDoctorPost(1);
+                } else {
+                    $post->getDoctorPost(0);
+                }
+
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
             }

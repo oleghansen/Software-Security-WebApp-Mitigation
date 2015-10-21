@@ -103,6 +103,10 @@ class Auth
         throw new Exception('Not logged in but called Auth::isDoctor() anyway');
     }
 
+    public function hasBankcard() {
+
+    }
+
     public function logout()
     {
         if($this->check()) {
