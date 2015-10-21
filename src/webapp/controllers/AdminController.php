@@ -34,63 +34,96 @@ class AdminController extends Controller
         $this->render('admin.twig', $variables);
     }
 
-    public function usernameToDoctor($username)
+    public function usernameToDoctor()
     {
-        if($this->userRepository->usernameToDoctor($username) === 1)
-        {
-            $this->app->flash('info',"Sucessfully promoted '$username' to doctor");
-            $this->app->redirect('/admin');
-            return;
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){
+            $request = $this->app->request;
+            $username = $request->post('User');
+            $usrStr = $request->post('str');
+            if($usrStr === $_SESSION['randStr'])
+            {
+                if($this->userRepository->usernameToDoctor($username) === 1)
+                {
+                    $this->app->flash('info',"Sucessfully promoted '$username' to doctor");
+                    $this->app->redirect('/admin');
+                    return;
+                }
+                    $this->app->flash('info', "'$username' could not be promoted, sorry dude.");
+                    $this->app->redirect('/admin');
+            }
+            else{
+                //Report possible CSRF attack
+                return $this->app->redirect('/');
+            }
+                
         }
-            $this->app->flash('info', "'$username' could not be promoted, sorry dude.");
-            $this->app->redirect('/admin');
+        else{
+           $this->app->redirect('/'); 
+        }
      
     }
 
-    public function delete($username)
+    public function delete()
     {   
-
-        $validation = new UserNamePasswordValidation();
-        if($validation->validateUserName($username)) {
-            $isAdmin = $this->auth->user()->isAdmin();
-            if($isAdmin){
-                if($username === $this->auth->getUsername()) {
-                    $this->app->flash('info',"Can not delete yourself.");
-                    $this->app->redirect('/admin');
-                    return;
-                }
-                if ($this->userRepository->deleteByUsername($username) === 1) {
-                    $this->app->flash('info', "Sucessfully deleted '$username'");
-                    $this->app->redirect('/admin');
-                    return;
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){
+            $request = $this->app->request;
+            $username = $request->post('User');
+            $usrStr = $request->post('str');
+            if($usrStr === $_SESSION['randStr'])
+            {
+                $validation = new UserNamePasswordValidation();
+                if($validation->validateUserName($username)) {
+                        if ($this->userRepository->deleteByUsername($username) === 1) {
+                            $this->app->flash('info', "Sucessfully deleted '$username'");
+                            $this->app->redirect('/admin');
+                            return;
+                        }
                 }
             }
             else{
-               $this->app->redirect('/'); 
+                //report possible CSRF attack
+                return $this->app->redirect('/');
             }
+        }
+        else{
+           $this->app->redirect('/'); 
         }
         
         $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
         $this->app->redirect('/admin');
     }
 
-    public function deletePost($postId)
+    public function deletePost()
     {
-        $validation = new UserNamePasswordValidation();
-        if($validation->validatePostId($postId)) {
-            $isAdmin = $this->auth->user()->isAdmin();
-            if($isAdmin){
-                if ($this->postRepository->deleteByPostid($postId) === 1) {
-                    $this->app->flash('info', "Sucessfully deleted '$postId'");
-                    $this->app->redirect('/admin');
-                    return;
-                }
+        $isAdmin = $this->auth->user()->isAdmin();
+        if($isAdmin){
+            $request = $this->app->request;
+            $postId = $request->post('postId');
+            $usrStr = $request->post('str');
+            $validation = new UserNamePasswordValidation();
+            if($usrStr === $_SESSION['randStr'])
+            {
+                if($validation->validatePostId($postId)) {
+                        if ($this->postRepository->deleteByPostid($postId) === 1) {
+                            $this->app->flash('info', "Sucessfully deleted '$postId'");
+                            $this->app->redirect('/admin');
+                            return;
+                        }
+                    }
+
             }
             else{
-              $this->app->redirect('/');  
+                //report possible CSRF attack
+                return $this->app->redirect('/');
             }
-        }
-        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
+         }
+         else{
+            $this->app->redirect('/');  
+         }
+            
+        $this->app->flash('info', "An error ocurred. Unable to delete post with postid: '$postId'.");
         $this->app->redirect('/admin');
     }
 
