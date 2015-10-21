@@ -53,33 +53,40 @@ class UserRepository
 
     public function getNameByUsername($username)
     {
-        $query = sprintf(self::FIND_FULL_NAME, $username);
 
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
-        return $row['fullname'];
+            $query = sprintf(self::FIND_FULL_NAME, $username);
+
+            $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+            $row = $result->fetch();
+            return $row['fullname'];
+ 
+
+        
 
     }
 
     public function findByUser($username)
     {
-        $query  = sprintf(self::FIND_BY_NAME, $username);
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
-        
-        if ($row === false) {
-            return false;
-        }
+
+            $query  = sprintf(self::FIND_BY_NAME, $username);
+            $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+            $row = $result->fetch();
+         
+             if ($row === false) {
+                return false;
+             }
+            return $this->makeUserFromRow($row);
 
 
-        return $this->makeUserFromRow($row);
     }
 
     public function deleteByUsername($username)
     {
-        return $this->pdo->exec(
-            sprintf(self::DELETE_BY_NAME, $username)
-        );
+            return $this->pdo->exec(
+                sprintf(self::DELETE_BY_NAME, $username)
+             );
+     
+        
     }
 
     public function usernameToDoctor($username){

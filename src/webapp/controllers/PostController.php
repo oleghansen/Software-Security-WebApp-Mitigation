@@ -7,6 +7,8 @@ use tdt4237\webapp\models\User;
 use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
+use tdt4237\webapp\validation\AddCommentValidation;
+use tdt4237\webapp\validation\UserNamePasswordValidation;
 
 class PostController extends Controller
 {
@@ -31,9 +33,17 @@ class PostController extends Controller
         }
         else{
             $posts = $this->postRepository->all();
-            $posts->sortByDate();
-            $this->render('posts.twig', ['posts' => $posts]);
+           
+            if($posts != null) {
+                $posts->sortByDate();
+                $this->render('posts.twig', ['posts' => $posts]);    
+            }else {
+                $this->render('posts.twig', ['posts' => $posts]);
+            }
+            
         }
+
+        session_regenerate_id(True);
     }
 
     public function show($postId)
@@ -44,22 +54,26 @@ class PostController extends Controller
 
         }
         else{
-            $post = $this->postRepository->find($postId);
-            $comments = $this->commentRepository->findByPostId($postId);
-            $request = $this->app->request;
-            $message = $request->get('msg');
-            $variables = [];
+            $validation = new UserNamePasswordValidation();
+            if($validation->validatePostId($postId)) {
+                $post = $this->postRepository->find($postId);
+                $comments = $this->commentRepository->findByPostId($postId);
+                $request = $this->app->request;
+                $message = $request->get('msg');
+                $variables = [];
 
-            if($message) {
-                $variables['msg'] = $message;
+                if($message) {
+                    $variables['msg'] = $message;
 
+                }
+
+                $this->render('showpost.twig', [
+                    'post' => $post,
+                    'comments' => $comments,
+                    'flash' => $variables
+                ]);    
             }
-
-            $this->render('showpost.twig', [
-                'post' => $post,
-                'comments' => $comments,
-                'flash' => $variables
-            ]);
+            
         }
 
     }
@@ -67,50 +81,82 @@ class PostController extends Controller
     public function addComment($postId)
     {
 
-        if($this->auth->isDoctor()) {
 
-            $comment = new Comment();
-            $comment->setAuthor($_SESSION['user']." [DOCTOR]");
-            $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
-            $comment->setDate(date("dmY"));
-            $comment->setPost($postId);
+        if($this->auth->isDoctor()){
 
-            $post = $this->postRepository->find($postId);
+        $content = $this->app->request->post("text");
+            $usrStr = $this->app->request->post("str");
+            if($usrStr === $_SESSION['randStr']) {
+                $valpostId = new UserNamePasswordValidation();
+                if ($valpostId->validatePostId($postId)) {
 
-            if($post->getDoctorAnswered() != 1) {
-                $post->setDoctorAnswered(1);
+                    $validation = new AddCommentValidation($_SESSION['user'], $content);
+                    $post = $this->postRepository->find($postId);
+                    $comments = $this->commentRepository->findByPostId($postId);
 
-                $this->postRepository->updatePost($post);
+                    if ($validation->isGoodToGo()) {
+                        $comment = new Comment();
+                        $comment->setAuthor($_SESSION['user']);
+                        $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+                        $comment->setDate(date("dmY"));
+                        $comment->setPost($postId);
+                        $this->commentRepository->save($comment);
 
-                $userDoctor = $this->userRepository->findByUser($_SESSION['user']);
-                $userPoster = $this->userRepository->findByUser($post->getAuthor());
+                        if ($post->getDoctorAnswered() != 1) {
+                            $post->setDoctorAnswered(1);
 
-                $userDoctor->addBalance(7);
-                $userPoster->addBalance(10);
+                            $this->postRepository->updatePost($post);
 
-                $this->userRepository->saveExistingUser($userDoctor);
-                $this->userRepository->saveExistingUser($userPoster);
-            }
+                            $userDoctor = $this->userRepository->findByUser($_SESSION['user']);
+                            $userPoster = $this->userRepository->findByUser($post->getAuthor());
 
-            $this->commentRepository->save($comment);
-            $this->app->redirect('/posts/' . $postId);
-        }
-        elseif(!$this->auth->guest()) {
+                            $userDoctor->addBalance(7);
+                            $userPoster->addBalance(10);
 
-            $comment = new Comment();
-            $comment->setAuthor($_SESSION['user']);
-            $comment->setText(htmlspecialchars($this->app->request->post("text"), ENT_QUOTES, 'UTF-8'));
-            $comment->setDate(date("dmY"));
-            $comment->setPost($postId);
-            $this->commentRepository->save($comment);
-            $this->app->redirect('/posts/' . $postId);
-        }
-        else {
-            $this->app->redirect('/login');
-            $this->app->flash('info', 'you must log in to do that');
-        }
+                            $this->userRepository->saveExistingUser($userDoctor);
+                            $this->userRepository->saveExistingUser($userPoster);
+                        }
+                    }
 
-    }
+
+                } elseif (!$this->auth->guest()) {
+
+                    $content = $this->app->request->post("text");
+                    $usrStr = $this->app->request->post("str");
+                    if ($usrStr === $_SESSION['randStr']) {
+                        $valpostId = new UserNamePasswordValidation();
+                        if ($valpostId->validatePostId($postId)) {
+
+                            $validation = new AddCommentValidation($_SESSION['user'], $content);
+                            $post = $this->postRepository->find($postId);
+                            $comments = $this->commentRepository->findByPostId($postId);
+
+                            if ($validation->isGoodToGo()) {
+                                $comment = new Comment();
+                                $comment->setAuthor($_SESSION['user']);
+                                $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+                                $comment->setDate(date("dmY"));
+                                $comment->setPost($postId);
+                                $this->commentRepository->save($comment);
+                                $this->app->redirect('/posts/' . $postId);
+                            } else {
+                                $errors = join("<br>\n", $validation->getValidationErrors());
+                                $this->app->flashNow('error', $errors);
+                                $this->render('showpost.twig', ['post' => $post, 'comments' => $comments, 'error' => $errors]);
+                            }
+                        }
+                    } else {
+                        //report possible CSRF attack
+                        $this->app->redirect('/');
+                    }
+
+                } else {
+                    $this->app->redirect('/login');
+                    $this->app->flash('info', 'you must log in to do that');
+                }
+            }}}
+
+
 
     public function showNewPostForm()
     {
@@ -130,31 +176,41 @@ class PostController extends Controller
         if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged on to create a post");
             $this->app->redirect("/login");
-        } else {
+        } 
+        else {
             $request = $this->app->request;
-            $title = $request->post('title');
-            $content = $request->post('content');
-            $author = $this->auth->getUsername();
-            $date = date("dmY");
 
+            $usrStr = $request->post('str');
+            if($usrStr === $_SESSION['randStr'])
+            {    
+                $title = $request->post('title');
+                $content = $request->post('content');
 
+                $author = $this->auth->getUsername();
+                $date = date("dmY");
 
-            $validation = new PostValidation($author, $title, $content);
-            if ($validation->isGoodToGo()) {
-                $post = new Post();
-                $post->setAuthor(htmlspecialchars("$author", ENT_QUOTES, 'UTF-8'));
-                $post->setTitle(htmlspecialchars("$title", ENT_QUOTES, 'UTF-8'));
-                $post->setContent(htmlspecialchars("$content", ENT_QUOTES, 'UTF-8'));
-                $post->setDate($date);
+                $validation = new PostValidation($author, $title, $content);
+                if ($validation->isGoodToGo()) {
+                    $post = new Post();
+                    $post->setAuthor(htmlspecialchars("$author", ENT_QUOTES, 'UTF-8'));
+                    $post->setTitle(htmlspecialchars("$title", ENT_QUOTES, 'UTF-8'));
+                    $post->setContent(htmlspecialchars("$content", ENT_QUOTES, 'UTF-8'));
+                    $post->setDate($date);
 
-                if(isset($_POST['showtodoctor'])) {
+                    if(isset($_POST['showtodoctor'])) {
                     $post->setDoctorPost(1);
                 } else {
-                    $post->getDoctorPost(0);
+                    $post->setDoctorPost(0);
                 }
 
-                $savedPost = $this->postRepository->save($post);
-                $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
+                    $savedPost = $this->postRepository->save($post);
+                    $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
+                }
+            }
+            else{
+                //report possible CSRF attack
+                return $this->app->redirect('/');
+
             }
             $this->app->flash('error', join('<br>', $validation->getValidationErrors()));
             $this->app->redirect("/posts/new");

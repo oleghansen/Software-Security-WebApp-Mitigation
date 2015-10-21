@@ -28,14 +28,29 @@ class RegistrationFormValidation
 
     private function validate($username, $password, $fullname, $address, $postcode)
     {
+        if(!preg_match('/^[a-zA-Z0-9 ]{2,20}$/', $username)) {
+            $this->validationErrors[] = 'Username is invalid';
+        }
+        if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/', $password)) {
+            $this->validationErrors[] = 'Invalid password';
+        }
+        if(!preg_match('/^[a-zA-Z ]{2,50}$/', $fullname)) {
+            $this->validationErrors[] = "Please write in your full name. No symbols!";
+        }
+        if(!preg_match('/^[a-zA-Z0-9 ]{2,70}$/', $address)) {
+            $this->validationErrors[] = "Please write in your address. No symbols!";
+        }
+        if(!preg_match('/^[0-9]{4}$/', $postcode)) {
+             $this->validationErrors[] = "Please write in your post code. Four digits!";
+        }
        
         if(strlen($username) < 2)
         {   
-            $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
+            $this->validationErrors[] = 'Username must be between 2 and 20 characters long';
         }
-        else if(strlen($username) > 10)
+        else if(strlen($username) > 20)
         {
-            $this->validationErrors[] = 'Username must be between 2 and 10 characters long';
+            $this->validationErrors[] = 'Username must be between 2 and 20 characters long';
         }
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';
@@ -57,8 +72,5 @@ class RegistrationFormValidation
             $this->validationErrors[] = "Post code must be exactly four digits";
         }
 
-        if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) {
-            $this->validationErrors[] = 'Username can only contain letters and numbers';
-        }
     }
 }

@@ -8,6 +8,7 @@
 
 namespace tdt4237\webapp\controllers;
 
+use tdt4237\webapp\validation\UserNamePasswordValidation;
 
 class ForgotPasswordController extends Controller {
 
@@ -22,7 +23,8 @@ class ForgotPasswordController extends Controller {
 
     function submitName() {
         $username = $this->app->request->post('username');
-        if($username != "") {
+        $validation = new UserNamePasswordValidation();
+        if($username != "" && $validation->validateUserName($username)) {
             $this->app->redirect('/forgot/' . $username);
         }
         else {
@@ -33,7 +35,8 @@ class ForgotPasswordController extends Controller {
     }
 
     function confirmForm($username) {
-        if($username != "") {
+        $validation = new UserNamePasswordValidation();
+        if($username != "" && $validation->validateUserName($username)) {
             $user = $this->userRepository->findByUser($username);
             $this->render('forgotPasswordConfirm.twig', ['user' => $user]);
         }

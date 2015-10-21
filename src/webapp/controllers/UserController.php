@@ -6,6 +6,7 @@ use tdt4237\webapp\models\Age;
 use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
+use tdt4237\webapp\validation\UserNamePasswordValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
 
 class UserController extends Controller
@@ -78,6 +79,7 @@ class UserController extends Controller
 
     public function logout()
     {
+    	session_regenerate_id(True);
         $this->auth->logout();
         $this->app->redirect('http://localhost:8080/', 301);
     }
@@ -90,24 +92,28 @@ class UserController extends Controller
 
         } 
         else {
-            $user = $this->userRepository->findByUser($username);
-            $isAdmin = $this->auth->user()->isAdmin();
-            if ($user != false && $user->getUsername() === $this->auth->getUsername()) {
+            $validation = new UserNamePasswordValidation();
+            if($validation->validateUserName($username)) {
+                $user = $this->userRepository->findByUser($username);
+                $isAdmin = $this->auth->user()->isAdmin();
+                if ($user != false && $user->getUsername() === $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
                     'user' => $user,
                     'username' => $username
                 ]);
-            }
-            else if($isAdmin){
-                $this->render('showuserlite.twig', [
+                }
+                else if($isAdmin){
+                    $this->render('showuserlite.twig', [
                     'user' => $user,
                     'username' => $username
-                ]);
+                    ]);
+                }
+                else {
+                    $this->app->redirect("/");
+                }
             }
-            else {
-                $this->app->redirect("/");
-            }
+            
         }
     }
 
@@ -126,28 +132,37 @@ class UserController extends Controller
         $user = $this->auth->user();
 
         $request = $this->app->request;
-        $email   = $request->post('email');
-        $bio     = $request->post('bio');
-        $bankcard = $request->post('bankcard');
-        $age     = $request->post('age');
-        $fullname = $request->post('fullname');
-        $address = $request->post('address');
-        $postcode = $request->post('postcode');
 
-        $validation = new EditUserFormValidation($email, $bio, $age);
+        $usrStr = $request->post('str');
+        if($usrStr === $_SESSION['randStr'])
+        { 
+            $email   = $request->post('email');
+            $bio     = $request->post('bio');
+            $age     = $request->post('age');
+            $fullname = $request->post('fullname');
+            $address = $request->post('address');
+            $postcode = $request->post('postcode');
+            $bankcard = $request->post('bankcard');
 
-        if ($validation->isGoodToGo()) {
-            $user->setEmail(new Email($email));
-            $user->setBio($bio);
-            $user->setBankcard($bankcard);
-            $user->setAge(new Age($age));
-            $user->setFullname($fullname);
-            $user->setAddress($address);
-            $user->setPostcode($postcode);
-            $this->userRepository->save($user);
+            $validation = new EditUserFormValidation($email, $bio, $age,$fullname,$address,$postcode);
 
-            $this->app->flashNow('info', 'Your profile was successfully saved.');
-            return $this->render('edituser.twig', ['user' => $user]);
+            if ($validation->isGoodToGo()) {
+                $user->setEmail(new Email($email));
+                $user->setBio($bio);
+                $user->setAge(new Age($age));
+                $user->setFullname($fullname);
+                $user->setAddress($address);
+                $user->setPostcode($postcode);
+                $user->setBankcard($bankcard);
+                $this->userRepository->save($user);
+
+                $this->app->flashNow('info', 'Your profile was successfully saved.');
+                return $this->render('edituser.twig', ['user' => $user]);
+            }
+        }else{
+            //Report possible CSRF attack
+            return $this->app->redirect('/');
+
         }
 
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
