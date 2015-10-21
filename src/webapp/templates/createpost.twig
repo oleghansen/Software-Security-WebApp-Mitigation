@@ -15,7 +15,9 @@
         <textarea cols="40" rows="10" id="cont" name="content"> </textarea><br />
 
         <input type="text" name="str" value="{{userStr}}" hidden />
-
+        {% if user.bankcard != null %}
+        <input type="checkbox" name="showtodoctor" value="value1"> Show post to doctors<br>
+        {% endif     %}
         <input type="submit" name="submit" value="Create post">
     </form>
 

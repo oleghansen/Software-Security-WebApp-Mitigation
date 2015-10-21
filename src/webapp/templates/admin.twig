@@ -2,39 +2,58 @@
 
 {% block content %}
 
-<h2>Admin section</h2>
+<h1>Admin section</h1>
 
 {% if users %}
+    <h2> Users: </h2> 
+    {% for user in users %}
+    <form action="/admin/delete/user" method="POST">
     <table>
     <tr>
         <th>Id</th>
         <th>Username</th>
     </tr>
-    {% for user in users %}
+ 
         <tr>
             <td>{{ user.userid }}</td>
             <td><a href="/user/{{ user.username}}">{{ user.username }}</a></td>
-            <td><a href="/admin/delete/{{ user.username }}">Delete this user</a></td>
+            <td><input type="text" name="User" value="{{ user.username }}" hidden /></td>
+            <td><input type="text" name="str" value="{{userStr}}" hidden /></td>
+            <td><input type="submit" name="submit" value="Delete this user"></td>
         </tr>
-    {% endfor %}
+   
     </table>
+    </form>
+    <form action="/admin/userToDoctor" method="POST">
+           {% if user.isdoctor == 1 %}
+              {{ user.username }} is Doctor
+           {% else %}
+             <input type="text" name="User" value="{{ user.username }}" hidden/>
+             <input type="text" name="str" value="{{userStr}}" hidden />
+             <input type="submit" name="submit" value="Promote {{ user.username }} to doctor">
+           {% endif %}
+    </form>
+                
+ {% endfor %}
 {% else %}
     The users table is empty.
 {% endif %}
 
 {% if posts %}
+    <h2> POST: </h2> 
+   {% for post in posts %}
+    <form action="/admin/delete/post" method="POST">
     <table>
         <tr>
-            <th> Id</th>
-            <th> Title</th>
-        </tr>
-        {% for post in posts %}
-        <tr>
+            <td>Title:</td>
             <td><a href="/posts/{{ post.postid }}">{{ post.title }}</a></td>
-            <td><a href="/admin/delete/post/{{ post.postid}}">Delete this post</a></td>
+            <td><input type="text" value="{{ post.postid}}" name="postId" hidden/></td>
+            <td><input type="text" name="str" value="{{userStr}}" hidden /></td>
+            <td><input type="submit" name="submit" value="Delete this post" /></td>
         </tr>
-        {% endfor %}
     </table>
+    </form>    
+   {% endfor %}         
 {% else %}
     There are no posts
 {% endif %}
