@@ -189,7 +189,7 @@ class PostController extends Controller {
                     $post->setContent(htmlspecialchars("$content", ENT_QUOTES, 'UTF-8'));
                     $post->setDate($date);
 
-                    if (isset($_POST['showtodoctor'])) {
+                    if ($this->auth->hasBankcard() && isset($_POST['showtodoctor'])) {
                         $post->setDoctorPost(1);
                     } else {
                         $post->setDoctorPost(0);
