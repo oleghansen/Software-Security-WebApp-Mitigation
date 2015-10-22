@@ -46,28 +46,34 @@ class PostController extends Controller {
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
 
-        } elseif ($this->auth->isDoctor()  && $post->getDoctorPost() != 1) {
-            $this->app->redirect("/posts");
-
         } else {
             $validation = new UserNamePasswordValidation();
-            if ($validation->validatePostId($postId)) {
+           
+            if (!$validation->validatePostId($postId)) {
+                $this->app->redirect("/posts");
+                	
+            } else {           	
                 $post = $this->postRepository->find($postId);
-                $comments = $this->commentRepository->findByPostId($postId);
-                $request = $this->app->request;
-                $message = $request->get('msg');
-                $variables = [];
-
-                if ($message) {
-                    $variables['msg'] = $message;
-
+                
+                if ($this->auth->isDoctor() && $post->getDoctorPost() != 1) {
+                	$this->app->redirect("/posts");
+                } else {
+                	
+	                $comments = $this->commentRepository->findByPostId($postId);
+	                $request = $this->app->request;
+	                $message = $request->get('msg');
+	                $variables = [];
+	
+	                if ($message) {
+	                    $variables['msg'] = $message;	
+	                }
+	
+	                $this->render('showpost.twig', [
+	                    'post' => $post,
+	                    'comments' => $comments,
+	                    'flash' => $variables
+	                ]);
                 }
-
-                $this->render('showpost.twig', [
-                    'post' => $post,
-                    'comments' => $comments,
-                    'flash' => $variables
-                ]);
             }
 
         }
