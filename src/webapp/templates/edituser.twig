@@ -17,7 +17,7 @@
         <input type = "text" id="postcode"name="postcode" onChange="validatePostCode()"  value= "{{ user.postcode }}"> <br />
 
         <label>Bank card:</label>
-        <input type = "text" name="bankcard" value= "{{ user.bankcard }}"> <br />
+        <input type = "text" id="bankcard" name="bankcard" onChange="validateBankCard()" value= "{{ user.bankcard }}"> <br />
 
         <label>Email:</label>
 
@@ -114,6 +114,16 @@
         return true;
 
     }
+    function validateBankCard() {
+        var regex = /^[0-9]{11}$/;
+        var OK = regex.test(document.getElementById("bankcard").value);
+        if(!OK) {
+            document.getElementById("feil").innerHTML = "Bank card can only contain numbers.";
+            return false;
+        }
+        return true;
+    }
+
     function validate() {
         var OK = true;
 
@@ -139,6 +149,9 @@
         if(!validateAddress()) {
             OK = false;
             
+        }
+        if(!validateBankCard()) {
+            OK = false;
         }
        
         return OK;

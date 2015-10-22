@@ -144,7 +144,7 @@ class UserController extends Controller
             $postcode = $request->post('postcode');
             $bankcard = $request->post('bankcard');
 
-            $validation = new EditUserFormValidation($email, $bio, $age,$fullname,$address,$postcode);
+            $validation = new EditUserFormValidation($email, $bio, $age,$fullname,$address,$postcode,$bankcard);
 
             if ($validation->isGoodToGo()) {
                 $user->setEmail(new Email($email));
