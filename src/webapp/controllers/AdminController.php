@@ -42,6 +42,7 @@ class AdminController extends Controller
             $username = $request->post('User'); // stor eller liten U i user? trengs validering?
             $valname = new UserNamePasswordValidation();
             if(!$valname->validateUserName($username)) {
+                $this->app->redirect('/');
                 return;
             }
             $usrStr = $request->post('str');
