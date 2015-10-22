@@ -40,6 +40,10 @@ class AdminController extends Controller
         if($isAdmin){
             $request = $this->app->request;
             $username = $request->post('User'); // stor eller liten U i user? trengs validering?
+            $valname = new UserNamePasswordValidation();
+            if(!$valname->validateUserName($username)) {
+                return;
+            }
             $usrStr = $request->post('str');
             if($usrStr === $_SESSION['randStr'])
             {
