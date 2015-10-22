@@ -48,23 +48,32 @@ class PostController extends Controller {
 
         } else {
             $validation = new UserNamePasswordValidation();
-            if ($validation->validatePostId($postId)) {
+           
+            if (!$validation->validatePostId($postId)) {
+                $this->app->redirect("/posts");
+                	
+            } else {           	
                 $post = $this->postRepository->find($postId);
-                $comments = $this->commentRepository->findByPostId($postId);
-                $request = $this->app->request;
-                $message = $request->get('msg');
-                $variables = [];
-
-                if ($message) {
-                    $variables['msg'] = $message;
-
+                
+                if ($this->auth->isDoctor() && $post->getDoctorPost() != 1) {
+                	$this->app->redirect("/posts");
+                } else {
+                	
+	                $comments = $this->commentRepository->findByPostId($postId);
+	                $request = $this->app->request;
+	                $message = $request->get('msg');
+	                $variables = [];
+	
+	                if ($message) {
+	                    $variables['msg'] = $message;	
+	                }
+	
+	                $this->render('showpost.twig', [
+	                    'post' => $post,
+	                    'comments' => $comments,
+	                    'flash' => $variables
+	                ]);
                 }
-
-                $this->render('showpost.twig', [
-                    'post' => $post,
-                    'comments' => $comments,
-                    'flash' => $variables
-                ]);
             }
 
         }
@@ -86,7 +95,7 @@ class PostController extends Controller {
                     $post = $this->postRepository->find($postId);
                     $comments = $this->commentRepository->findByPostId($postId);
 
-                    if ($validation->isGoodToGo()) {
+                    if ($post->getDoctorPost() == 1 && $validation->isGoodToGo()) {
                         $comment = new Comment();
                         $comment->setAuthor($_SESSION['user']." [DOCTOR]");
                         $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
@@ -186,7 +195,7 @@ class PostController extends Controller {
                     $post->setContent(htmlspecialchars("$content", ENT_QUOTES, 'UTF-8'));
                     $post->setDate($date);
 
-                    if (isset($_POST['showtodoctor'])) {
+                    if ($this->auth->hasBankcard() && isset($_POST['showtodoctor'])) {
                         $post->setDoctorPost(1);
                     } else {
                         $post->setDoctorPost(0);

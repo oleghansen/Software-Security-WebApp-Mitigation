@@ -42,9 +42,6 @@ class Auth
 
             return false;
         }
-        if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/', $password)) {
-            return false;
-        }
         $user = $this->userRepository->findByUser($username);
 
         if ($user === false) {
@@ -111,8 +108,14 @@ class Auth
         throw new Exception('Not logged in but called Auth::isDoctor() anyway');
     }
 
-    public function hasBankcard() {
+    public function hasBankcard()
+    {
+        if ($this->check()) {
+            $user=$_SESSION['user'];
+            return $this->user()->getBankcard() != null;
+        }
 
+        throw new Exception('Not logged in but called Auth::hasBankcard() anyway');
     }
 
     public function logout()
