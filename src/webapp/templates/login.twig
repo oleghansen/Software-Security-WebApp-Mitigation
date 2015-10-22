@@ -29,16 +29,6 @@
         }
         return true;
     }
-    function validatePassword(){
-        var regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/;
-        var OK = regex.test(document.getElementById("pass").value);
-
-        if(!OK) {
-            document.getElementById("feil").innerHTML ="Invalid username or password";
-            return false;    
-        }
-        return true;
-    }
 
 	function validate() {
 
@@ -48,10 +38,6 @@
 	if(!validateUserName()){
 		OK = false;
 	}
-
-    if(!validatePassword()) {
-        OK = false;
-    }
 
 	return OK;
 	}

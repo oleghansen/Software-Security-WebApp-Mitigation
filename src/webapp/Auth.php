@@ -42,9 +42,6 @@ class Auth
 
             return false;
         }
-        if(!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$/', $password)) {
-            return false;
-        }
         $user = $this->userRepository->findByUser($username);
 
         if ($user === false) {

@@ -40,7 +40,7 @@ class LoginController extends Controller
         	$oldTime = microtime(True);
         }
         $validation = new UserNamePasswordValidation();
-        if($validation->validateUserName($user) && $validation->validateLoginPassword($pass)) {
+        if($validation->validateUserName($user)) {
             if ($this->auth->checkCredentials($user, $pass)) {
                 $rand = rand(40, 55);
                 $randString = $this->generateRandomString($rand);
