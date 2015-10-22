@@ -6,9 +6,9 @@ class EditUserFormValidation
 {
     private $validationErrors = [];
     
-    public function __construct($email, $bio, $age,$fullname,$address,$postcode)
+    public function __construct($email, $bio, $age,$fullname,$address,$postcode,$bankcard)
     {
-        $this->validate($email, $bio, $age,$fullname,$address,$postcode);
+        $this->validate($email, $bio, $age,$fullname,$address,$postcode,$bankcard);
     }
     
     public function isGoodToGo()
@@ -21,13 +21,19 @@ class EditUserFormValidation
         return $this->validationErrors;
     }
 
-    private function validate($email, $bio, $age,$fullname,$address,$postcode)
+    private function validate($email, $bio, $age,$fullname,$address,$postcode,$bankcard)
     {
         $this->validateEmail($email);
         $this->validateAge($age);
         $this->validateBio($bio);
         $this->validateFullname($fullname);
         $this->validateAddress($address);
+        $this->validateBankCard($bankcard);
+    }
+    private function validateBankCard($bankcard) {
+        if(!preg_match('/^[0-9]{11}$/', $bankcard)) {
+            $this->validationErrors[] = "Bankcard can only contain numbers.";
+        }
     }
     private function validateFullname($fullname) {
         if(!preg_match('/^[a-zA-Z]{1}[a-zA-Z ]{1,48}$/', $fullname)) {

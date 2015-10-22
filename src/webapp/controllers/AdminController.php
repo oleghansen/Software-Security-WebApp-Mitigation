@@ -39,7 +39,12 @@ class AdminController extends Controller
         $isAdmin = $this->auth->user()->isAdmin();
         if($isAdmin){
             $request = $this->app->request;
-            $username = $request->post('User');
+            $username = $request->post('User'); 
+            $valname = new UserNamePasswordValidation();
+            if(!$valname->validateUserName($username)) {
+                $this->app->redirect('/');
+                return;
+            }
             $usrStr = $request->post('str');
             if($usrStr === $_SESSION['randStr'])
             {
