@@ -118,7 +118,7 @@
         var regex = /^[0-9]{11}$/;
         var OK = regex.test(document.getElementById("bankcard").value);
         if(!OK) {
-            document.getElementById("feil").innerHTML = "Bank card can only contain numbers.";
+            document.getElementById("feil").innerHTML = "Bank card can only contain numbers(11 numbers). ";
             return false;
         }
         return true;
