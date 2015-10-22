@@ -46,6 +46,9 @@ class PostController extends Controller {
             $this->app->flash("info", "You must be logged in to do that");
             $this->app->redirect("/login");
 
+        } elseif ($this->auth->isDoctor()  && $post->getDoctorPost() != 1) {
+            $this->app->redirect("/posts");
+
         } else {
             $validation = new UserNamePasswordValidation();
             if ($validation->validatePostId($postId)) {
@@ -86,7 +89,7 @@ class PostController extends Controller {
                     $post = $this->postRepository->find($postId);
                     $comments = $this->commentRepository->findByPostId($postId);
 
-                    if ($validation->isGoodToGo()) {
+                    if ($post->getDoctorPost() == 1 && $validation->isGoodToGo()) {
                         $comment = new Comment();
                         $comment->setAuthor($_SESSION['user']." [DOCTOR]");
                         $comment->setText(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
